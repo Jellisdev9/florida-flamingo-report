@@ -1,0 +1,25 @@
+/* Tailwind v4 — replaces the old @tailwind base/components/utilities directives */
+@import "tailwindcss";
+
+/* Tell Tailwind v4 where to scan for class names. Path is relative to this file. */
+@source "../../templates";
+
+/* ── Custom font families ─────────────────────────────────────────────────── */
+/* @theme lets us define CSS variables that Tailwind's utility classes use.    */
+/* font-serif and font-sans can then be applied via class="font-serif" etc.    */
+@theme {
+  --font-family-serif: "Playfair Display", Georgia, serif;
+  --font-family-sans: Inter, system-ui, sans-serif;
+}
+
+/* ── Brand color utilities ────────────────────────────────────────────────── */
+/* These custom classes mirror what the React app defined in index.css.        */
+/* They are plain CSS — Tailwind will include them because they're in input.css */
+
+.fpr-navy      { background-color: #0d1b2a; }
+.fpr-teal      { background-color: #0f4c5c; }
+.fpr-gold      { color: #d4a817; }
+.fpr-gold-bg   { background-color: #d4a817; }
+.fpr-coral     { color: #e05c4b; }
+.fpr-coral-bg  { background-color: #e05c4b; }
+.fpr-green     { color: #2e7d32; }

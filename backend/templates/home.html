@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{# This template extends base.html — Django renders base.html and fills its named
+   block slots with the content defined below. #}
+
+{% block title %}Florida Property Review — Florida Real Estate Intelligence{% endblock %}
+
+{% block content %}
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-10 flex flex-col gap-10">
+
+  <!-- ── Hero + Top Markets Sidebar ───────────────────────────────────── -->
+  <div class="flex flex-col lg:flex-row gap-8">
+
+    <!-- Left: Featured article hero card -->
+    <div class="lg:w-2/3 relative rounded-sm overflow-hidden shadow-sm group">
+      {# The dark overlay div sits on top of the image to make white text readable #}
+      <div class="absolute inset-0 bg-black/40 z-10"></div>
+      <img
+        src="{{ featured.hero_image_url|default:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200' }}"
+        alt="{{ featured.headline|default:'Featured Story' }}"
+        class="w-full h-[400px] md:h-[500px] object-cover transition-transform duration-700 group-hover:scale-105"
+      />
+      {# z-20 puts this text layer above the z-10 dark overlay #}
+      <div class="absolute inset-0 z-20 flex flex-col justify-end p-6 md:p-10 text-white bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+        <span class="bg-[#e05c4b] text-white text-xs font-bold px-3 py-1 uppercase tracking-wider rounded-sm w-fit mb-4">
+          Featured Story
+        </span>
+        <h2 class="font-serif text-3xl md:text-5xl font-bold leading-tight mb-3">
+          {{ featured.headline|default:"Florida's real estate market, tracked like a business desk." }}
+        </h2>
+        <p class="text-lg md:text-xl text-gray-200 mb-6 max-w-2xl">
+          {{ featured.subheadline|default:"Deal flow, agent moves, and market shifts — delivered with clarity and speed." }}
+        </p>
+        {# Only show the CTA button when a featured article exists in the DB #}
+        {% if featured %}
+        <a href="{% url 'article_detail' featured.slug %}"
+           class="flex items-center gap-2 font-bold text-sm bg-white text-black px-6 py-3 w-fit rounded-sm hover:bg-[#d4a817] hover:text-white transition-colors">
+          READ THE STORY &rarr;
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right: Top Markets sidebar -->
+    {# {% include %} inserts the partial template here, sharing this template's context #}
+    <div class="lg:w-1/3">
+      {% include "partials/top_markets_sidebar.html" %}
+    </div>
+
+  </div>
+  <!-- ── End Hero ──────────────────────────────────────────────────────── -->
+
+  <!-- ── Article Cards Row ─────────────────────────────────────────────── -->
+  {# {% for article in articles %} loops over the queryset from home_view's context #}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+    {% for article in articles %}
+    <a href="{% url 'article_detail' article.slug %}"
+       class="group flex flex-col bg-white border border-gray-200 rounded-sm overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <div class="relative h-40 overflow-hidden">
+        <img
+          src="{{ article.hero_image_url|default:'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600' }}"
+          alt="{{ article.headline }}"
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        {# get_category_display converts the stored code (e.g. "MARKET_PULSE")
+           to its human-readable label ("Market Pulse") using Django's choices API #}
+        <span class="absolute top-2 left-2 bg-[#e05c4b] text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider rounded-sm">
+          {{ article.get_category_display }}
+        </span>
+      </div>
+      <div class="p-4 flex flex-col gap-2 flex-1">
+        <h3 class="font-serif font-bold text-sm leading-snug group-hover:text-[#d4a817] transition-colors line-clamp-3">
+          {{ article.headline }}
+        </h3>
+        <div class="mt-auto text-xs text-gray-400">
+          {# The date filter formats a Python date object: "M j, Y" → "Jun 5, 2025" #}
+          {{ article.published_date|date:"M j, Y" }} &middot; {{ article.read_time_minutes }} min
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  <!-- ── End Article Cards ─────────────────────────────────────────────── -->
+
+  <!-- ── Lower 3-Column Section ────────────────────────────────────────── -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <!-- Luxury Closings widget -->
+    <div class="bg-white border border-gray-200 rounded-sm p-5 shadow-sm h-full">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-[#0d1b2a]">
+        <h3 class="font-serif font-bold text-lg">Luxury Closings</h3>
+      </div>
+      <div class="flex flex-col gap-4">
+        {% for sale in closings %}
+        {# forloop.first is True only on the first iteration — we skip the divider then #}
+        {% if not forloop.first %}<div class="h-px w-full bg-gray-100"></div>{% endif %}
+        <a href="{% url 'notable_sales' %}" class="flex items-start gap-4 group">
+          <img
+            src="{{ sale.hero_image_url|default:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400' }}"
+            alt="{{ sale.city }}"
+            class="w-20 h-20 object-cover rounded-sm shrink-0"
+          />
+          <div class="flex flex-col">
+            {# price_display is the @property we added in BUILD_PLAN Step 2 #}
+            <span class="font-bold text-lg text-gray-900">{{ sale.price_display }}</span>
+            <span class="text-sm text-gray-600">{{ sale.title }}</span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Top Agents widget -->
+    {% include "partials/top_agents_sidebar.html" %}
+
+    <!-- Neighborhood Intelligence widget -->
+    <div class="bg-white border border-gray-200 rounded-sm p-5 shadow-sm h-full">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-[#0d1b2a]">
+        <h3 class="font-serif font-bold text-lg">Neighborhood Intelligence</h3>
+      </div>
+      <div class="flex flex-col gap-5">
+        {% for n in neighborhoods %}
+        <div class="flex flex-col gap-2 {% if not forloop.last %}border-b border-gray-100 pb-4{% endif %}">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-gray-900">{{ n.neighborhood }}</span>
+            {# Tag color: HOT=coral, RISING=gold, COOLING=blue, STABLE=gray #}
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-sm
+              {% if n.tag == 'HOT' %}bg-[#e05c4b] text-white
+              {% elif n.tag == 'RISING' %}bg-[#d4a817] text-black
+              {% elif n.tag == 'COOLING' %}bg-blue-100 text-blue-800
+              {% else %}bg-gray-100 text-gray-700{% endif %}">
+              {{ n.tag }}
+            </span>
+          </div>
+          <p class="text-sm text-gray-600">{{ n.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+  <!-- ── End Lower Section ─────────────────────────────────────────────── -->
+
+  <!-- ── Newsletter Banner ─────────────────────────────────────────────── -->
+  <div class="w-full bg-[#0d1b2a] rounded-sm p-8 md:p-12 shadow-sm text-center flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="text-left max-w-xl">
+      <h3 class="font-serif font-bold text-3xl text-white mb-2">Stay ahead of the market.</h3>
+      <p class="text-gray-300">Join 15,000+ real estate professionals receiving our daily market intelligence.</p>
+    </div>
+    {# Show success message if user just subscribed (session flag set by subscribe_view) #}
+    {% if subscribed %}
+      <p class="text-[#d4a817] font-bold text-lg">You're subscribed!</p>
+    {% else %}
+      {# HTML form POST — no JavaScript needed.
+         {% csrf_token %} injects a hidden security token Django requires on all POST forms.
+         The 'next' hidden input tells subscribe_view where to redirect after saving. #}
+      <form method="POST" action="{% url 'subscribe' %}" class="flex w-full md:w-auto max-w-md gap-2">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="/" />
+        <input type="email" name="email" placeholder="Your email address"
+               class="flex-1 px-4 py-3 text-gray-900 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#d4a817]" />
+        <button type="submit"
+                class="bg-[#d4a817] text-black font-bold px-6 py-3 rounded-sm hover:bg-yellow-500 transition-colors shrink-0">
+          SUBSCRIBE
+        </button>
+      </form>
+    {% endif %}
+  </div>
+  <!-- ── End Newsletter ────────────────────────────────────────────────── -->
+
+</main>
+{% endblock %}

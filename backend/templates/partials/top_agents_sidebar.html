@@ -1,0 +1,22 @@
+{# Partial template for the Top Agents sidebar widget.                           #}
+{# top_agents comes from _base_context() so it's available on every page.        #}
+
+<div class="bg-white border border-gray-200 rounded-sm p-5 shadow-sm h-full">
+  <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-[#0d1b2a]">
+    <h3 class="font-serif font-bold text-lg">Top Agents This Month</h3>
+  </div>
+  <div class="flex flex-col gap-5">
+    {% for agent in top_agents %}
+    <div class="flex items-center gap-3">
+      {# The rank badge — a navy circle with the agent's ranking number inside #}
+      <div class="w-10 h-10 rounded-full bg-[#0d1b2a] flex items-center justify-center font-serif font-bold text-lg text-white shrink-0">
+        {{ agent.rank }}
+      </div>
+      <div class="flex flex-col">
+        <span class="font-bold text-sm text-gray-900">{{ agent.name }}</span>
+        <span class="text-xs text-gray-500">{{ agent.location }} &middot; {{ agent.volume_display }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>

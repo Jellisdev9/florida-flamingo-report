@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {# {% block title %} lets child templates override the page title #}
+  <title>{% block title %}Florida Property Review{% endblock %}</title>
+
+  {# Google Fonts — same two fonts as the React app #}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  {# {% static %} builds the correct URL to /static/css/output.css #}
+  <link rel="stylesheet" href="{% static 'css/output.css' %}" />
+</head>
+<body class="min-h-screen bg-[#f4f5f7] flex flex-col font-sans">
+
+  <!-- ===== HEADER ===== -->
+  <header class="w-full">
+
+    {# ── Top bar: logo + nav ──────────────────────────────────────── #}
+    <div class="bg-[#0d1b2a] text-white px-4 md:px-8 py-4">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+
+        {# Logo + Masthead #}
+        <a href="/" class="flex items-center gap-3 group">
+          <div class="bg-[#d4a817] text-black font-bold text-xl px-2 py-1 flex items-center justify-center h-10 w-10">
+            FPR
+          </div>
+          <div>
+            <h1 class="font-serif text-2xl md:text-3xl font-bold tracking-tight">Florida Property Review</h1>
+            <p class="text-gray-400 text-xs md:text-sm tracking-wide hidden md:block">
+              Notable sales, agent moves, market trends, and neighborhood intelligence across Florida.
+            </p>
+          </div>
+        </a>
+
+        {# Navigation — request.resolver_match.url_name gives us the current URL name
+           so we can highlight the active nav link without any JavaScript #}
+        <nav class="flex items-center gap-6 whitespace-nowrap text-sm font-medium overflow-x-auto">
+          <a href="/"
+             class="{% if request.resolver_match.url_name == 'home' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
+            Home
+          </a>
+          <a href="/notable-sales/"
+             class="{% if request.resolver_match.url_name == 'notable_sales' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
+            Notable Sales
+          </a>
+          <a href="#" class="text-gray-300 hover:text-white pb-1 border-b-2 border-transparent transition-colors">Market Pulse</a>
+          <a href="#" class="text-gray-300 hover:text-white pb-1 border-b-2 border-transparent transition-colors">Agents</a>
+          <a href="#" class="text-gray-300 hover:text-white pb-1 border-b-2 border-transparent transition-colors">Neighborhoods</a>
+          <a href="#" class="text-gray-300 hover:text-white pb-1 border-b-2 border-transparent transition-colors">About</a>
+        </nav>
+
+      </div>
+    </div>
+
+    {# ── Market strip ticker ──────────────────────────────────────── #}
+    {# market_metrics comes from _base_context() in every view        #}
+    <div class="bg-[#0f4c5c] text-white w-full py-2 px-4 overflow-x-auto border-t border-b border-gray-700/50 shadow-sm">
+      <div class="max-w-7xl mx-auto flex items-center justify-between min-w-max gap-6">
+        {% for metric in market_metrics %}
+        <div class="flex flex-col gap-1 pr-6 border-r border-gray-600/50 last:border-0 last:pr-0">
+          <div class="text-xs text-gray-300 uppercase tracking-wider font-semibold">
+            {{ metric.city }} {{ metric.metric_label }}
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="font-bold text-lg">{{ metric.value_display }}</span>
+            {# is_positive drives both the color class and the arrow symbol #}
+            <span class="text-sm font-semibold {% if metric.is_positive %}text-[#2e7d32]{% else %}text-[#e05c4b]{% endif %}">
+              {% if metric.is_positive %}▲{% else %}▼{% endif %}
+              {{ metric.change_display }}
+            </span>
+          </div>
+          <div class="text-[10px] text-gray-400">vs. Apr 2024</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </header>
+  <!-- ===== END HEADER ===== -->
+
+  {# ── Page content slot ────────────────────────────────────────────────── #}
+  {# Child templates fill this block with their own HTML via {% block content %} #}
+  {% block content %}{% endblock %}
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="w-full border-t border-gray-200 bg-white py-12 px-4 md:px-8 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-3 opacity-50 grayscale">
+        <div class="bg-[#0d1b2a] text-white font-bold text-xl px-2 py-1 flex items-center justify-center h-10 w-10">FPR</div>
+        <span class="font-serif font-bold text-lg">Florida Property Review</span>
+      </div>
+      <div class="text-sm text-gray-500">&copy; 2024 Florida Property Review. All rights reserved.</div>
+    </div>
+  </footer>
+  <!-- ===== END FOOTER ===== -->
+
+</body>
+</html>

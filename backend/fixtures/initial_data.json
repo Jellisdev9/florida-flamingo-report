@@ -1,0 +1,465 @@
+[
+  {
+    "model": "articles.article",
+    "pk": 1,
+    "fields": {
+      "slug": "naples-bayfront-estate",
+      "title": "Naples Bayfront Estate Sets a New Benchmark",
+      "headline": "$32.5M Naples Bayfront Estate Sets a New Benchmark",
+      "subheadline": "A rare bayside compound in Port Royal redefines luxury waterfront living.",
+      "category": "NOTABLE_SALE",
+      "body": "A spectacular bayfront compound in Naples' exclusive Port Royal neighborhood has closed for $32.5 million, marking one of the highest residential sales in Southwest Florida this year. The off-market transaction underscores the enduring strength of the ultra-luxury segment, even as broader market inventory begins to normalize.\n\nLocated at 3255 Fort Charles Drive, the 11,276-square-foot estate sits on 1.5 acres with sweeping views of Naples Bay. Custom-built in 2019, the property features a rare deep-water yacht basin capable of accommodating vessels over 100 feet—a highly coveted amenity that drove competitive interest from multiple out-of-state buyers.\n\n\"This sale underscores the enduring demand for trophy waterfront properties in Naples, particularly in Port Royal. Buyers at this level are immune to interest rate fluctuations; they are looking for irreplaceable assets.\" — Michael Lawler, Premier Sotheby's International Realty\n\nThe buyer, identified only through an LLC registered in Delaware, plans to utilize the estate as a seasonal residence. The transaction was handled entirely off-market, reflecting a growing trend among high-net-worth individuals seeking privacy in their real estate dealings.\n\nMarket data from the Naples Area Board of Realtors indicates that while overall luxury inventory (homes priced above $5 million) has increased 14% year-over-year, properties with direct Gulf access and deep-water dockage remain acutely scarce. This supply-demand imbalance continues to push prices for prime waterfront acreage to record highs, solidifying Naples' position alongside Palm Beach and Miami Beach as one of the nation's premier luxury real estate hubs.",
+      "byline": "By Caroline Bennett, Senior Real Estate Editor",
+      "author_avatar_url": "https://ui-avatars.com/api/?name=Caroline+Bennett&background=0d1b2a&color=fff",
+      "read_time_minutes": 5,
+      "hero_image_url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200",
+      "published_date": "2024-05-12",
+      "is_featured": true,
+      "is_published": true,
+      "created_at": "2024-05-12T09:00:00Z"
+    }
+  },
+  {
+    "model": "articles.article",
+    "pk": 2,
+    "fields": {
+      "slug": "corcoran-group-lichtenstein-team",
+      "title": "Corcoran Group Adds Lichtenstein Team in Miami",
+      "headline": "The Corcoran Group Adds The Lichtenstein Team in Miami",
+      "subheadline": "One of South Florida's top-producing teams joins Corcoran's expanding Florida footprint.",
+      "category": "AGENT_WATCH",
+      "body": "The Corcoran Group has announced the addition of The Lichtenstein Team, one of Miami's most recognized luxury residential sales teams, to its South Florida roster. The move marks another step in Corcoran's aggressive expansion across the Florida market.\n\nThe Lichtenstein Team, led by David and Rachel Lichtenstein, has closed over $280 million in residential sales in the past three years, specializing in Brickell, Coconut Grove, and Coral Gables. Their client base skews heavily toward international buyers and corporate relocations.\n\n\"Corcoran's brand equity in the luxury segment aligns perfectly with the clientele we serve,\" said David Lichtenstein. \"This gives us the infrastructure to scale without compromising the boutique experience our clients expect.\"\n\nThe team joins a growing list of high-profile recruits at Corcoran Florida, which has added six teams in the past 18 months as competition for top producers intensifies across major brokerages.",
+      "byline": "By Marcus Reid, Staff Reporter",
+      "author_avatar_url": "https://ui-avatars.com/api/?name=Marcus+Reid&background=0d1b2a&color=fff",
+      "read_time_minutes": 2,
+      "hero_image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200",
+      "published_date": "2024-05-11",
+      "is_featured": false,
+      "is_published": true,
+      "created_at": "2024-05-11T09:00:00Z"
+    }
+  },
+  {
+    "model": "articles.article",
+    "pk": 3,
+    "fields": {
+      "slug": "coconut-grove-inventory-tightens",
+      "title": "Coconut Grove: Inventory Tightens As Demand Surges",
+      "headline": "Coconut Grove: Inventory Tightens As Demand Surges",
+      "subheadline": "Active listings in the Grove have fallen to a five-year low as buyers compete for limited stock.",
+      "category": "NEIGHBORHOOD_WATCH",
+      "body": "Coconut Grove is experiencing one of its tightest inventory environments in recent memory, with active listings falling 31% year-over-year and average days on market dropping to just 18 — down from 42 a year ago.\n\nDemand is being driven by a combination of domestic migration from high-tax states and an influx of tech sector employees drawn to Miami's growing startup ecosystem. Single-family homes in the $3–7 million range are seeing the most competition, with multiple-offer scenarios now routine.\n\nNew construction has not kept pace. The neighborhood's historic preservation constraints and mature tree canopy significantly limit teardown and infill opportunities, creating a structural scarcity that shows no signs of easing.\n\n\"What's happening in the Grove is less a market cycle and more a permanent recalibration,\" said one local agent. \"The buyers coming in now understand they're paying for irreplaceable neighborhood character, and they're willing to.\"",
+      "byline": "By Simone Tran, Market Reporter",
+      "author_avatar_url": "https://ui-avatars.com/api/?name=Simone+Tran&background=0d1b2a&color=fff",
+      "read_time_minutes": 3,
+      "hero_image_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
+      "published_date": "2024-05-10",
+      "is_featured": false,
+      "is_published": true,
+      "created_at": "2024-05-10T09:00:00Z"
+    }
+  },
+  {
+    "model": "articles.article",
+    "pk": 4,
+    "fields": {
+      "slug": "related-breaks-ground-st-regis-brickell",
+      "title": "Related Breaks Ground on St. Regis Residences, Brickell",
+      "headline": "Related Breaks Ground on St. Regis Residences, Brickell",
+      "subheadline": "The 50-story tower will bring 150 branded residences to Miami's fastest-growing neighborhood.",
+      "category": "DEVELOPMENT",
+      "body": "Related Group officially broke ground this week on the St. Regis Residences Brickell, a 50-story ultra-luxury tower set to reshape the skyline of Miami's financial district. The project, developed in partnership with Marriott's St. Regis brand, will deliver 150 residences ranging from $3.5 million to over $30 million.\n\nThe tower is already more than 70% reserved, according to Related, with strong demand from Latin American and European buyers drawn to the brand's legacy and Brickell's positioning as a global finance hub.\n\nAmenities include a private marina, a 10,000-square-foot spa, multiple dining concepts, and a butler service program modeled after the brand's flagship properties. Completion is slated for Q3 2027.\n\n\"Brickell is no longer just a financial district—it's becoming one of the most sought-after branded residential addresses in the western hemisphere,\" said Jorge Perez, Related Group CEO.",
+      "byline": "By Thomas Alcott, Development Editor",
+      "author_avatar_url": "https://ui-avatars.com/api/?name=Thomas+Alcott&background=0d1b2a&color=fff",
+      "read_time_minutes": 2,
+      "hero_image_url": "https://images.unsplash.com/photo-1551361415-69c87624334f?w=1200",
+      "published_date": "2024-05-09",
+      "is_featured": false,
+      "is_published": true,
+      "created_at": "2024-05-09T09:00:00Z"
+    }
+  },
+  {
+    "model": "articles.article",
+    "pk": 5,
+    "fields": {
+      "slug": "florida-home-prices-rise-5-7-percent",
+      "title": "Florida Home Prices Rise 5.7% Year Over Year",
+      "headline": "Florida Home Prices Rise 5.7% Year Over Year",
+      "subheadline": "Statewide appreciation accelerates despite national cooling trends, driven by migration and tight supply.",
+      "category": "MARKET_PULSE",
+      "body": "Florida residential home prices rose 5.7% year-over-year in April, outpacing the national average of 3.1% and continuing a trend of above-benchmark appreciation that has characterized the state's housing market since 2021.\n\nThe gain was broad-based across metro areas, with Miami-Dade leading at 8.2%, followed by Naples at 7.4% and West Palm Beach at 6.9%. Tampa and Orlando showed more modest gains of 4.1% and 3.8% respectively, as those markets absorbed elevated new construction inventory.\n\nAnalysts attribute the sustained appreciation to three factors: continued net in-migration from high-cost northeastern and midwestern markets, an absence of meaningful new luxury supply in coastal markets, and persistent demand from international buyers — particularly from Latin America and Europe — who view Florida real estate as a dollar-denominated safe-haven asset.\n\nRising insurance costs and increased property tax assessments remain headwinds for entry-level buyers, but the luxury segment above $5 million has shown little sensitivity to these pressures.",
+      "byline": "By Caroline Bennett, Senior Real Estate Editor",
+      "author_avatar_url": "https://ui-avatars.com/api/?name=Caroline+Bennett&background=0d1b2a&color=fff",
+      "read_time_minutes": 4,
+      "hero_image_url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200",
+      "published_date": "2024-05-09",
+      "is_featured": false,
+      "is_published": true,
+      "created_at": "2024-05-09T10:00:00Z"
+    }
+  },
+  {
+    "model": "articles.article",
+    "pk": 6,
+    "fields": {
+      "slug": "modern-masterpiece-boca-raton-24m",
+      "title": "Modern Masterpiece in Boca Raton Sells for $24M",
+      "headline": "Modern Masterpiece in Boca Raton Sells for $24M",
+      "subheadline": "A striking contemporary estate on the Intracoastal trades in an off-market deal.",
+      "category": "NOTABLE_SALE",
+      "body": "A contemporary Intracoastal estate in Boca Raton's exclusive Royal Palm Yacht and Country Club has traded for $24 million in an off-market transaction, setting a new benchmark for modern architectural design in the market.\n\nThe 9,400-square-foot residence, completed in 2022, features floor-to-ceiling glass, a rooftop terrace, and 200 feet of waterfront with a private dock. The property was listed for just 11 days before going under contract.\n\nThe seller, a tech executive who commissioned the home, accepted an offer from a New York-based family office. The transaction was handled by ONE Sotheby's International Realty.",
+      "byline": "By Marcus Reid, Staff Reporter",
+      "author_avatar_url": "https://ui-avatars.com/api/?name=Marcus+Reid&background=0d1b2a&color=fff",
+      "read_time_minutes": 2,
+      "hero_image_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200",
+      "published_date": "2024-05-08",
+      "is_featured": false,
+      "is_published": true,
+      "created_at": "2024-05-08T09:00:00Z"
+    }
+  },
+
+  {
+    "model": "sales.notablesale",
+    "pk": 1,
+    "fields": {
+      "slug": "la-gorce-island-miami-beach-48m",
+      "title": "La Gorce Island Waterfront Estate",
+      "price": "48000000.00",
+      "location": "La Gorce Island, Miami Beach, FL 33140",
+      "city": "Miami Beach",
+      "region": "SOUTH_FLORIDA",
+      "property_type": "WATERFRONT_ESTATE",
+      "close_date": "2024-05-09",
+      "hero_image_url": "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=1200",
+      "is_featured": true,
+      "article": null,
+      "brokerage": "Douglas Elliman",
+      "beds": 8,
+      "baths": "9.5",
+      "sq_ft": 12000
+    }
+  },
+  {
+    "model": "sales.notablesale",
+    "pk": 2,
+    "fields": {
+      "slug": "naples-bayfront-fort-charles-32m",
+      "title": "Naples Bayfront Estate — Fort Charles Drive",
+      "price": "32500000.00",
+      "location": "3255 Fort Charles Drive, Naples, FL 34102",
+      "city": "Naples",
+      "region": "SOUTH_FLORIDA",
+      "property_type": "WATERFRONT_ESTATE",
+      "close_date": "2024-05-12",
+      "hero_image_url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200",
+      "is_featured": false,
+      "article": 1,
+      "brokerage": "Premier Sotheby's International Realty",
+      "beds": 8,
+      "baths": "10.5",
+      "sq_ft": 11276
+    }
+  },
+  {
+    "model": "sales.notablesale",
+    "pk": 3,
+    "fields": {
+      "slug": "boca-raton-oceanfront-estate-32m",
+      "title": "Boca Raton Oceanfront Estate Sells for $32.5M",
+      "price": "32500000.00",
+      "location": "Ocean Blvd, Boca Raton, FL 33432",
+      "city": "Boca Raton",
+      "region": "SOUTH_FLORIDA",
+      "property_type": "WATERFRONT_ESTATE",
+      "close_date": "2024-05-12",
+      "hero_image_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200",
+      "is_featured": false,
+      "article": null,
+      "brokerage": "ONE Sotheby's International Realty",
+      "beds": 7,
+      "baths": "8.0",
+      "sq_ft": 10400
+    }
+  },
+  {
+    "model": "sales.notablesale",
+    "pk": 4,
+    "fields": {
+      "slug": "bay-point-compound-miami-28m",
+      "title": "Bay Point Compound",
+      "price": "28750000.00",
+      "location": "Bay Point Drive, Miami, FL 33137",
+      "city": "Miami",
+      "region": "SOUTH_FLORIDA",
+      "property_type": "WATERFRONT_ESTATE",
+      "close_date": "2024-05-07",
+      "hero_image_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200",
+      "is_featured": false,
+      "article": null,
+      "brokerage": "Compass Florida",
+      "beds": 6,
+      "baths": "7.5",
+      "sq_ft": 9800
+    }
+  },
+  {
+    "model": "sales.notablesale",
+    "pk": 5,
+    "fields": {
+      "slug": "coral-gables-office-building-26m",
+      "title": "Coral Gables Office Building Trades for $26M",
+      "price": "26000000.00",
+      "location": "Miracle Mile, Coral Gables, FL 33134",
+      "city": "Coral Gables",
+      "region": "SOUTH_FLORIDA",
+      "property_type": "COMMERCIAL",
+      "close_date": "2024-05-10",
+      "hero_image_url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200",
+      "is_featured": false,
+      "article": null,
+      "brokerage": "CBRE",
+      "beds": null,
+      "baths": null,
+      "sq_ft": 38000
+    }
+  },
+  {
+    "model": "sales.notablesale",
+    "pk": 6,
+    "fields": {
+      "slug": "naples-bayfront-home-24m",
+      "title": "Naples Bayfront Home Sells for $24M",
+      "price": "24000000.00",
+      "location": "Gordon Drive, Naples, FL 34102",
+      "city": "Naples",
+      "region": "SOUTH_FLORIDA",
+      "property_type": "WATERFRONT_ESTATE",
+      "close_date": "2024-05-08",
+      "hero_image_url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200",
+      "is_featured": false,
+      "article": null,
+      "brokerage": "Premier Sotheby's International Realty",
+      "beds": 6,
+      "baths": "7.0",
+      "sq_ft": 8900
+    }
+  },
+  {
+    "model": "sales.notablesale",
+    "pk": 7,
+    "fields": {
+      "slug": "surf-club-penthouse-surfside-18m",
+      "title": "Surf Club Four Seasons Penthouse Closes at $18.75M",
+      "price": "18750000.00",
+      "location": "9011 Collins Ave, Surfside, FL 33154",
+      "city": "Surfside",
+      "region": "SOUTH_FLORIDA",
+      "property_type": "CONDO_PENTHOUSE",
+      "close_date": "2024-05-11",
+      "hero_image_url": "https://images.unsplash.com/photo-1551361415-69c87624334f?w=1200",
+      "is_featured": false,
+      "article": null,
+      "brokerage": "Douglas Elliman",
+      "beds": 4,
+      "baths": "4.5",
+      "sq_ft": 5200
+    }
+  },
+  {
+    "model": "sales.notablesale",
+    "pk": 8,
+    "fields": {
+      "slug": "park-grove-tower-coconut-grove-9m",
+      "title": "Park Grove Tower Unit Closes for $9.8M",
+      "price": "9800000.00",
+      "location": "2811 S Bayshore Dr, Coconut Grove, FL 33133",
+      "city": "Coconut Grove",
+      "region": "SOUTH_FLORIDA",
+      "property_type": "CONDO_RESIDENCE",
+      "close_date": "2024-05-05",
+      "hero_image_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
+      "is_featured": false,
+      "article": null,
+      "brokerage": "Related Realty",
+      "beds": 3,
+      "baths": "3.5",
+      "sq_ft": 3100
+    }
+  },
+
+  {
+    "model": "market.marketmetric",
+    "pk": 1,
+    "fields": {
+      "city": "Miami",
+      "metric_label": "Median Price",
+      "value_display": "$685,000",
+      "change_display": "+6.2%",
+      "is_positive": true,
+      "sort_order": 1,
+      "updated_at": "2024-05-12T08:00:00Z"
+    }
+  },
+  {
+    "model": "market.marketmetric",
+    "pk": 2,
+    "fields": {
+      "city": "Tampa",
+      "metric_label": "Inventory",
+      "value_display": "3.1 Months",
+      "change_display": "-4.8%",
+      "is_positive": false,
+      "sort_order": 2,
+      "updated_at": "2024-05-12T08:00:00Z"
+    }
+  },
+  {
+    "model": "market.marketmetric",
+    "pk": 3,
+    "fields": {
+      "city": "Jacksonville",
+      "metric_label": "Days on Market",
+      "value_display": "36 Days",
+      "change_display": "-2",
+      "is_positive": false,
+      "sort_order": 3,
+      "updated_at": "2024-05-12T08:00:00Z"
+    }
+  },
+  {
+    "model": "market.marketmetric",
+    "pk": 4,
+    "fields": {
+      "city": "Orlando",
+      "metric_label": "Condo Activity",
+      "value_display": "1,248 Sales",
+      "change_display": "+9.1%",
+      "is_positive": true,
+      "sort_order": 4,
+      "updated_at": "2024-05-12T08:00:00Z"
+    }
+  },
+  {
+    "model": "market.marketmetric",
+    "pk": 5,
+    "fields": {
+      "city": "Palm Beach",
+      "metric_label": "Luxury Sales",
+      "value_display": "$10.4M Avg",
+      "change_display": "+11.3%",
+      "is_positive": true,
+      "sort_order": 5,
+      "updated_at": "2024-05-12T08:00:00Z"
+    }
+  },
+
+  {
+    "model": "market.agent",
+    "pk": 1,
+    "fields": {
+      "name": "The Jills Zeder Group",
+      "location": "Miami Beach",
+      "volume_display": "$98.4M",
+      "rank": 1,
+      "period_month": 6,
+      "period_year": 2026
+    }
+  },
+  {
+    "model": "market.agent",
+    "pk": 2,
+    "fields": {
+      "name": "Corcoran Reverie Group",
+      "location": "Naples",
+      "volume_display": "$72.1M",
+      "rank": 2,
+      "period_month": 6,
+      "period_year": 2026
+    }
+  },
+  {
+    "model": "market.agent",
+    "pk": 3,
+    "fields": {
+      "name": "Compass Florida Group",
+      "location": "Miami",
+      "volume_display": "$65.7M",
+      "rank": 3,
+      "period_month": 6,
+      "period_year": 2026
+    }
+  },
+
+  {
+    "model": "market.neighborhoodintel",
+    "pk": 1,
+    "fields": {
+      "neighborhood": "Winter Park",
+      "city": "Orlando",
+      "description": "Inventory hits 18-month low as out-of-state buyers target luxury historic homes.",
+      "tag": "HOT",
+      "sort_order": 1,
+      "updated_at": "2024-05-12T08:00:00Z"
+    }
+  },
+  {
+    "model": "market.neighborhoodintel",
+    "pk": 2,
+    "fields": {
+      "neighborhood": "St. Petersburg",
+      "city": "Tampa Bay",
+      "description": "Downtown condo prices surge 12% QoQ amid new developments.",
+      "tag": "RISING",
+      "sort_order": 2,
+      "updated_at": "2024-05-12T08:00:00Z"
+    }
+  },
+
+  {
+    "model": "market.fastestgrowingmarket",
+    "pk": 1,
+    "fields": {
+      "location": "Winter Park",
+      "change_display": "+18.7%",
+      "rank": 1
+    }
+  },
+  {
+    "model": "market.fastestgrowingmarket",
+    "pk": 2,
+    "fields": {
+      "location": "West Palm Beach",
+      "change_display": "+14.2%",
+      "rank": 2
+    }
+  },
+  {
+    "model": "market.fastestgrowingmarket",
+    "pk": 3,
+    "fields": {
+      "location": "Sarasota",
+      "change_display": "+13.5%",
+      "rank": 3
+    }
+  },
+  {
+    "model": "market.fastestgrowingmarket",
+    "pk": 4,
+    "fields": {
+      "location": "Lakeland",
+      "change_display": "+12.2%",
+      "rank": 4
+    }
+  },
+  {
+    "model": "market.fastestgrowingmarket",
+    "pk": 5,
+    "fields": {
+      "location": "Jacksonville Beach",
+      "change_display": "+11.8%",
+      "rank": 5
+    }
+  }
+]

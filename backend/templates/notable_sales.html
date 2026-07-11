@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Notable Sales — Florida Property Review{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="w-full bg-white border-b border-gray-200 py-8 px-4 md:px-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="font-serif text-4xl md:text-5xl font-bold text-[#0d1b2a]">Notable Sales</h1>
+    <p class="text-lg text-gray-500 mt-2">The biggest closings. The most exclusive addresses. Across Florida.</p>
+  </div>
+</div>
+
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 py-8 flex flex-col gap-8">
+
+  <!-- ── Region Filter Tabs ────────────────────────────────────────────── -->
+  {# Each tab is an <a> link to ?region=VALUE — no JavaScript needed.
+     The page reloads when a tab is clicked; Django re-queries and re-renders. #}
+  <div class="flex items-center gap-4 overflow-x-auto pb-2">
+
+    {# "All Regions" tab — active when active_region is empty #}
+    <a href="{% url 'notable_sales' %}"
+       class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition-all
+              {% if not active_region %}bg-[#0d1b2a] text-white{% else %}bg-white text-gray-600 border border-gray-200 hover:bg-gray-50{% endif %}">
+      All Regions
+    </a>
+
+    {# region_map is the REGION_MAP dict from notable_sales_view
+       .items gives us (code, label) pairs — e.g. ('SOUTH_FLORIDA', 'South Florida') #}
+    {% for code, label in region_map.items %}
+    <a href="?region={{ code }}"
+       class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition-all
+              {% if active_region == code %}bg-[#0d1b2a] text-white{% else %}bg-white text-gray-600 border border-gray-200 hover:bg-gray-50{% endif %}">
+      {{ label }}
+    </a>
+    {% endfor %}
+
+  </div>
+  <!-- ── End Region Tabs ───────────────────────────────────────────────── -->
+
+  <div class="flex flex-col lg:flex-row gap-10">
+
+    <!-- ── Main Content ──────────────────────────────────────────────── -->
+    <div class="w-full lg:w-2/3 flex flex-col gap-10">
+
+      <!-- Featured Sale Hero -->
+      {% if featured %}
+      <div class="relative rounded-sm overflow-hidden shadow-sm group bg-black">
+        <img src="{{ featured.hero_image_url|default:'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=1200' }}"
+             alt="{{ featured.title }}"
+             class="w-full h-[450px] object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
+        <div class="absolute inset-0 z-20 flex flex-col justify-end p-6 md:p-10 text-white bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+          <span class="bg-[#e05c4b] text-white text-xs font-bold px-3 py-1 uppercase tracking-wider rounded-sm w-fit mb-4">
+            FEATURED SALE
+          </span>
+          <h2 class="font-serif text-3xl md:text-4xl font-bold leading-tight mb-3">{{ featured.title }}</h2>
+          <p class="text-gray-200 mb-6 max-w-2xl">{{ featured.price_display }} — {{ featured.city }}, FL</p>
+          <a href="{% url 'notable_sales' %}"
+             class="flex items-center gap-2 font-bold text-sm bg-white text-black px-6 py-3 w-fit rounded-sm hover:bg-[#d4a817] hover:text-white transition-colors">
+            READ FULL STORY &rarr;
+          </a>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Sales Grid -->
+      <div>
+        <h3 class="font-serif font-bold text-2xl text-[#0d1b2a] mb-6">Recent Notable Sales</h3>
+        {% if sales %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {% for sale in sales %}
+          <div class="group relative rounded-sm overflow-hidden bg-white shadow-sm border border-gray-200 flex flex-col h-full">
+            <div class="relative h-48 w-full overflow-hidden">
+              {# Price badge overlaid on the top-right corner of the image #}
+              <div class="absolute top-3 right-3 z-10 bg-[#0d1b2a] text-white text-sm font-bold px-3 py-1 rounded-sm shadow-md">
+                {{ sale.price_display }}
+              </div>
+              <img src="{{ sale.hero_image_url|default:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600' }}"
+                   alt="{{ sale.title }}"
+                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            </div>
+            <div class="p-5 flex flex-col flex-1">
+              <span class="text-[10px] font-bold tracking-wider text-[#e05c4b] uppercase mb-2">
+                {{ sale.get_property_type_display }}
+              </span>
+              <h4 class="font-serif text-lg font-bold leading-tight mb-3">{{ sale.title }}</h4>
+              <div class="mt-auto flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
+                <span>{{ sale.city }}, FL</span>
+                <span>{{ sale.close_date|date:"M j, Y" }}</span>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-400 text-sm py-8 text-center">No sales found for this region.</p>
+        {% endif %}
+      </div>
+
+    </div>
+    <!-- ── End Main Content ──────────────────────────────────────────── -->
+
+    <!-- ── Sidebar ───────────────────────────────────────────────────── -->
+    <div class="w-full lg:w-1/3 flex flex-col gap-8">
+
+      <!-- Top Luxury Closings ranking list -->
+      <div class="bg-white border border-gray-200 rounded-sm p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-5 pb-2 border-b-2 border-[#0d1b2a]">
+          <h3 class="font-serif font-bold text-lg">Top Luxury Closings</h3>
+        </div>
+        <div class="flex flex-col gap-4">
+          {% for sale in top_closings %}
+          <div class="flex items-center gap-3">
+            {# forloop.counter starts at 1 (unlike forloop.index0 which starts at 0) #}
+            <span class="font-serif font-bold text-2xl text-gray-200 shrink-0 w-6">{{ forloop.counter }}</span>
+            <div class="flex flex-col flex-1">
+              <span class="font-bold text-sm text-gray-900">{{ sale.title }}</span>
+              <span class="text-xs text-gray-500">{{ sale.city }}</span>
+            </div>
+            <span class="bg-[#0d1b2a] text-white text-xs font-bold px-2 py-1 rounded-sm shrink-0">
+              {{ sale.price_display }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Fastest Growing Markets ranking list -->
+      <div class="bg-white border border-gray-200 rounded-sm p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-5 pb-2 border-b-2 border-[#0d1b2a]">
+          <h3 class="font-serif font-bold text-lg">Fastest Growing Markets</h3>
+          <span class="text-xs text-gray-500 uppercase tracking-wider font-semibold">% Change</span>
+        </div>
+        <div class="flex flex-col gap-4">
+          {% for item in fastest_growing %}
+          <div class="flex items-center justify-between border-b border-gray-100 last:border-0 pb-3 last:pb-0">
+            <div class="flex items-center gap-3">
+              <span class="font-serif font-bold text-lg text-[#d4a817] w-4">{{ item.rank }}</span>
+              <span class="font-bold text-sm text-gray-800">{{ item.location }}</span>
+            </div>
+            <span class="font-bold text-[#2e7d32]">{{ item.change_display }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Subscribe CTA -->
+      <div class="bg-[#0f4c5c] text-white rounded-sm p-6 shadow-sm flex flex-col items-center text-center">
+        <h3 class="font-serif font-bold text-2xl mb-2">Subscribe for Deal Alerts</h3>
+        <p class="text-sm text-gray-200 mb-6 leading-relaxed">
+          Get the latest notable sales and market intelligence — delivered weekly.
+        </p>
+        {% if subscribed %}
+          <p class="text-[#d4a817] font-bold">You're subscribed!</p>
+        {% else %}
+          <form method="POST" action="{% url 'subscribe' %}" class="w-full flex flex-col gap-3">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}" />
+            <input type="email" name="email" placeholder="Email address"
+                   class="w-full px-4 py-3 text-gray-900 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#d4a817] text-sm" />
+            <button type="submit"
+                    class="w-full bg-[#0d1b2a] text-white font-bold py-3 rounded-sm hover:bg-gray-800 transition-colors text-sm">
+              SUBSCRIBE
+            </button>
+          </form>
+        {% endif %}
+        <p class="text-[10px] text-gray-300 mt-4">No spam. Unsubscribe anytime.</p>
+      </div>
+
+    </div>
+    <!-- ── End Sidebar ───────────────────────────────────────────────── -->
+
+  </div>
+</main>
+{% endblock %}
