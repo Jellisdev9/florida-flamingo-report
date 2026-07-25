@@ -36,8 +36,10 @@
           </div>
         </a>
 
-        {# Navigation — request.resolver_match.url_name gives us the current URL name
-           so we can highlight the active nav link without any JavaScript #}
+        {% comment %}
+        Navigation — request.resolver_match.url_name gives us the current URL name
+        so we can highlight the active nav link without any JavaScript
+        {% endcomment %}
         <nav class="flex items-center gap-6 whitespace-nowrap text-sm font-medium overflow-x-auto">
           <a href="/"
              class="{% if request.resolver_match.url_name == 'home' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">

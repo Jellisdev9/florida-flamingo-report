@@ -51,9 +51,11 @@
     {% endif %}
 
     <!-- Article body -->
-    {# linebreaksbr converts \n\n paragraph breaks in the plain-text body into <br> tags.
-       For full HTML body content you would use |safe instead, but that requires
-       trusting the content source — plain text + linebreaksbr is safer. #}
+    {% comment %}
+    linebreaksbr converts \n\n paragraph breaks in the plain-text body into <br> tags.
+    For full HTML body content you would use |safe instead, but that requires
+    trusting the content source — plain text + linebreaksbr is safer.
+    {% endcomment %}
     <div class="prose prose-lg max-w-none text-gray-800">
       {{ article.body|linebreaksbr }}
     </div>

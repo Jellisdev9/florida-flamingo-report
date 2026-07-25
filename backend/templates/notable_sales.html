@@ -15,8 +15,10 @@
 <main class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 py-8 flex flex-col gap-8">
 
   <!-- ── Region Filter Tabs ────────────────────────────────────────────── -->
-  {# Each tab is an <a> link to ?region=VALUE — no JavaScript needed.
-     The page reloads when a tab is clicked; Django re-queries and re-renders. #}
+  {% comment %}
+  Each tab is an <a> link to ?region=VALUE — no JavaScript needed.
+  The page reloads when a tab is clicked; Django re-queries and re-renders.
+  {% endcomment %}
   <div class="flex items-center gap-4 overflow-x-auto pb-2">
 
     {# "All Regions" tab — active when active_region is empty #}
@@ -26,8 +28,10 @@
       All Regions
     </a>
 
-    {# region_map is the REGION_MAP dict from notable_sales_view
-       .items gives us (code, label) pairs — e.g. ('SOUTH_FLORIDA', 'South Florida') #}
+    {% comment %}
+    region_map is the REGION_MAP dict from notable_sales_view
+    .items gives us (code, label) pairs — e.g. ('SOUTH_FLORIDA', 'South Florida')
+    {% endcomment %}
     {% for code, label in region_map.items %}
     <a href="?region={{ code }}"
        class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition-all
