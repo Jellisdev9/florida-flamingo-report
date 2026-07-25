@@ -11,7 +11,7 @@ Covers notable sales, agent moves, market trends, neighborhoods, luxury closings
 - **Templates** — Django templates (`backend/templates/`), styled with Tailwind CSS (standalone CLI binary, no Node build step)
 - **Database** — PostgreSQL (production) / SQLite (development)
 - The DRF `/api/` endpoints are kept alongside the template views (useful for mobile/RSS/future use) but the site itself does not consume them — views query the ORM directly and pass context to templates.
-- `artifacts/florida-property-review/` is the **original React SPA — archived, not served**. The project pivoted from React+API to Django server-rendered templates; this directory is kept for reference only.
+- The original React SPA (`artifacts/florida-property-review/`) has been removed. The project pivoted from React+API to Django server-rendered templates; see git history before this deletion if the old React code is ever needed.
 
 ## Tech Stack
 
@@ -56,8 +56,6 @@ florida-front-end/
 │   ├── sales/                      # notable sales app
 │   ├── market/                     # market metrics, agents, neighborhoods app
 │   └── subscribers/                # newsletter signups app
-└── artifacts/
-    └── florida-property-review/    # ARCHIVED React SPA — not served, kept for reference
 ```
 
 ## Django Apps
@@ -199,4 +197,3 @@ Cycle for every endpoint, model, or view change:
 ## Next Steps
 
 - [ ] Production: add gunicorn + nginx config, PostgreSQL setup
-- [ ] Decide the long-term fate of `artifacts/florida-property-review/` (archived React SPA) — keep as reference or remove

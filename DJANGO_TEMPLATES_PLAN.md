@@ -12,7 +12,7 @@ admin, and database are already done — only the frontend layer changes.
 | Django models (`Article`, `NotableSale`, `MarketMetric`, etc.) | **Keep as-is** |
 | Django Admin (your CMS) | **Keep as-is** |
 | DRF serializers + API views | **Keep** (they're free, and useful later for mobile/RSS) |
-| React SPA (`artifacts/florida-property-review/`) | **Archive** — no longer served |
+| React SPA (`artifacts/florida-property-review/`) | **Removed** — no longer served |
 | Node / pnpm / Vite / TypeScript toolchain | **Gone** — never needed again |
 | Tailwind CSS classes | **Keep** — same classes, served via standalone binary |
 | URL structure (`/`, `/articles/<slug>/`, `/notable-sales/`) | **Keep** |
