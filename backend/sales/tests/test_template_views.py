@@ -50,10 +50,13 @@ class NotableSalesViewTest(TestCase):
         self.assertContains(response, "Bayfront Estate")
 
     def test_region_filter_excludes_other_regions(self):
-        # ?region=ORLANDO should not show our South Florida sale
+        # ?region=ORLANDO should exclude our South Florida sale from the grid.
+        # Checked via context['sales'] (the grid queryset) rather than the
+        # rendered page, because "Top Luxury Closings" is a statewide sidebar
+        # widget that intentionally ignores the region filter.
         response = self.client.get(reverse("notable_sales") + "?region=ORLANDO")
         self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, "Bayfront Estate")
+        self.assertNotIn(self.sale, response.context["sales"])
 
     def test_region_filter_shows_matching_region(self):
         # ?region=SOUTH_FLORIDA should show our sale
