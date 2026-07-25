@@ -25,7 +25,7 @@ Covers notable sales, agent moves, market trends, neighborhoods, luxury closings
 ## Project Structure
 
 ```
-Florida-Front-End/
+florida-front-end/
 ├── CLAUDE.md
 ├── BUILD_PLAN.md                   # order-of-operations for the Django rebuild
 ├── DJANGO_TEMPLATES_PLAN.md        # full template/view code reference

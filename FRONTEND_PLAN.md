@@ -75,7 +75,7 @@ clones the repo runs `pnpm install` to recreate it from the `pnpm-lock.yaml` man
 
 **Why pnpm not npm/yarn?** pnpm is faster and more disk-efficient. It uses a shared global
 store and hard-links packages instead of copying them. This workspace (the whole
-`Florida-Front-End/` directory) has a `pnpm-workspace.yaml` that ties all sub-packages
+`florida-front-end/` directory) has a `pnpm-workspace.yaml` that ties all sub-packages
 together so they can share dependencies.
 
 **Key commands:**
@@ -279,7 +279,7 @@ the styling layer on top. These live in `src/components/ui/`.
 ## 3. Project Structure
 
 ```
-Florida-Front-End/                      ← Workspace root (pnpm workspace)
+florida-front-end/                      ← Workspace root (pnpm workspace)
 ├── pnpm-workspace.yaml                 ← Tells pnpm which folders are packages
 ├── pnpm-lock.yaml                      ← Exact versions of every installed package (committed to git)
 ├── package.json                        ← Workspace-level dependencies
@@ -707,7 +707,7 @@ pnpm --version    # should print 9.x.x or 10.x.x
 
 ### Step 3: Install all project dependencies
 
-From the **workspace root** (`Florida-Front-End/`):
+From the **workspace root** (`florida-front-end/`):
 
 ```bash
 pnpm install

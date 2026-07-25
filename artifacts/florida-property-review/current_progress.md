@@ -624,7 +624,7 @@ describe('ArticlePage (unknown slug)', () => {
 ### Backend
 
 ```bash
-cd /home/michaelsullivan/Projects/real-estate/Florida-Front-End/backend
+cd /home/michaelsullivan/Projects/real-estate/florida-front-end/backend
 
 # First-time setup (if needed)
 uv sync
@@ -641,7 +641,7 @@ uv run python manage.py test
 ### Frontend
 
 ```bash
-cd /home/michaelsullivan/Projects/real-estate/Florida-Front-End/artifacts/florida-property-review
+cd /home/michaelsullivan/Projects/real-estate/florida-front-end/artifacts/florida-property-review
 
 # Install deps (including new test packages after adding them to package.json)
 pnpm install
@@ -667,7 +667,7 @@ pnpm test         # watch mode
 - **`sale_facts`:** SerializerMethodField on `ArticleDetailSerializer` — reads from the reverse OneToOne `obj.sale`. Only present on `ArticleDetail`, not on `Article` (list type).
 - **Agent fixtures:** `period_month=6, period_year=2026` so `top_agents` view returns them for the current month.
 - **Python tooling:** `uv` only — no pip, no venv. Dependencies in `backend/pyproject.toml`.
-- **JS tooling:** `pnpm` workspaces — workspace root is `Florida-Front-End/`, catalog in `pnpm-workspace.yaml`.
+- **JS tooling:** `pnpm` workspaces — workspace root is `florida-front-end/`, catalog in `pnpm-workspace.yaml`.
 
 ---
 
