@@ -27,14 +27,14 @@ from market.models import MarketMetric, NeighborhoodIntel, Agent
 # ── DRF API views (unchanged) ─────────────────────────────────────────────────
 
 class ArticleListView(generics.ListAPIView):
-    queryset = Article.objects.filter(is_published=True)
+    queryset = Article.objects.filter(status=Article.Status.PUBLISHED)
     serializer_class = ArticleListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["category"]
 
 
 class ArticleDetailView(generics.RetrieveAPIView):
-    queryset = Article.objects.filter(is_published=True)
+    queryset = Article.objects.filter(status=Article.Status.PUBLISHED)
     serializer_class = ArticleDetailSerializer
     lookup_field = "slug"
 
@@ -42,8 +42,8 @@ class ArticleDetailView(generics.RetrieveAPIView):
 @api_view(["GET"])
 def featured_article(request):
     article = (
-        Article.objects.filter(is_published=True, is_featured=True).first()
-        or Article.objects.filter(is_published=True).first()
+        Article.objects.filter(status=Article.Status.PUBLISHED, is_featured=True).first()
+        or Article.objects.filter(status=Article.Status.PUBLISHED).first()
     )
     if not article:
         raise NotFound("No articles found.")
@@ -87,11 +87,13 @@ def home_view(request):
     view sets this after a successful POST so the homepage can show
     "You're subscribed!" instead of the email form.
     """
-    featured = Article.objects.filter(is_featured=True, is_published=True).first()
+    featured = Article.objects.filter(
+        is_featured=True, status=Article.Status.PUBLISHED
+    ).first()
 
     # Exclude the featured article from the card row so it doesn't appear twice.
     # The conditional None handles the case where there's no featured article.
-    articles = Article.objects.filter(is_published=True).exclude(
+    articles = Article.objects.filter(status=Article.Status.PUBLISHED).exclude(
         pk=featured.pk if featured else None
     )[:5]
 
@@ -123,12 +125,12 @@ def article_detail_view(request, slug):
     'related' fetches up to 3 articles in the same category for the
     Related Stories sidebar widget.
     """
-    article = get_object_or_404(Article, slug=slug, is_published=True)
+    article = get_object_or_404(Article, slug=slug, status=Article.Status.PUBLISHED)
 
     # Related stories: same category, not this article, up to 3
     related = Article.objects.filter(
         category=article.category,
-        is_published=True,
+        status=Article.Status.PUBLISHED,
     ).exclude(pk=article.pk)[:3]
 
     context = {

@@ -62,7 +62,9 @@ florida-front-end/
 
 ### articles/
 Manages editorial article content.
-- **Model:** `Article` — slug, title, headline, subheadline, category, body, byline, author_avatar_url, read_time_minutes, hero_image_url, published_date, is_featured, is_published
+- **Model:** `Article` — slug, title, headline, subheadline, category, body, byline, author_avatar_url, read_time_minutes, hero_image_url, published_date, is_featured, status, source_url, source_name
+- **Status:** `DRAFT` / `PENDING_REVIEW` / `PUBLISHED` — an editorial workflow field, not a boolean. Only `status=PUBLISHED` articles are ever shown on the site. Default is `PUBLISHED` (matches prior `is_published` behavior for hand-written/admin-created articles); an automated content pipeline should explicitly set `PENDING_REVIEW` so nothing goes live without editor approval.
+- **`source_url`/`source_name`:** attribution fields for auto-generated/scraped articles — blank for hand-written ones.
 - **Categories:** NOTABLE_SALE, AGENT_WATCH, NEIGHBORHOOD_WATCH, DEVELOPMENT, MARKET_PULSE
 
 ### sales/

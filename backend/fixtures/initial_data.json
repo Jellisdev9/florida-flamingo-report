@@ -15,7 +15,7 @@
       "hero_image_url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200",
       "published_date": "2024-05-12",
       "is_featured": true,
-      "is_published": true,
+      "status": "PUBLISHED",
       "created_at": "2024-05-12T09:00:00Z"
     }
   },
@@ -35,7 +35,7 @@
       "hero_image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200",
       "published_date": "2024-05-11",
       "is_featured": false,
-      "is_published": true,
+      "status": "PUBLISHED",
       "created_at": "2024-05-11T09:00:00Z"
     }
   },
@@ -55,7 +55,7 @@
       "hero_image_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200",
       "published_date": "2024-05-10",
       "is_featured": false,
-      "is_published": true,
+      "status": "PUBLISHED",
       "created_at": "2024-05-10T09:00:00Z"
     }
   },
@@ -75,7 +75,7 @@
       "hero_image_url": "https://images.unsplash.com/photo-1551361415-69c87624334f?w=1200",
       "published_date": "2024-05-09",
       "is_featured": false,
-      "is_published": true,
+      "status": "PUBLISHED",
       "created_at": "2024-05-09T09:00:00Z"
     }
   },
@@ -95,7 +95,7 @@
       "hero_image_url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200",
       "published_date": "2024-05-09",
       "is_featured": false,
-      "is_published": true,
+      "status": "PUBLISHED",
       "created_at": "2024-05-09T10:00:00Z"
     }
   },
@@ -115,7 +115,7 @@
       "hero_image_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200",
       "published_date": "2024-05-08",
       "is_featured": false,
-      "is_published": true,
+      "status": "PUBLISHED",
       "created_at": "2024-05-08T09:00:00Z"
     }
   },

@@ -25,8 +25,8 @@ class ArticleListViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_returns_only_published_articles(self):
-        make_article(slug="published", is_published=True)
-        make_article(slug="draft", is_published=False)
+        make_article(slug="published", status=Article.Status.PUBLISHED)
+        make_article(slug="draft", status=Article.Status.DRAFT)
         response = self.client.get("/api/articles/")
         slugs = [a["slug"] for a in response.data["results"]]
         self.assertIn("published", slugs)
@@ -64,7 +64,7 @@ class ArticleDetailViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_returns_404_for_unpublished(self):
-        make_article(slug="draft-article", is_published=False)
+        make_article(slug="draft-article", status=Article.Status.DRAFT)
         response = self.client.get("/api/articles/draft-article/")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 

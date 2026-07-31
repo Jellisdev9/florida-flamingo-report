@@ -28,7 +28,7 @@ def make_article(**kwargs):
         "byline": "Staff Writer",
         "published_date": datetime.date.today(),
         "is_featured": False,
-        "is_published": True,
+        "status": Article.Status.PUBLISHED,
     }
     defaults.update(kwargs)
     return Article.objects.create(**defaults)

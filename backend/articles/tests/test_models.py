@@ -34,9 +34,9 @@ class ArticleModelTest(TestCase):
         slugs = list(Article.objects.values_list("slug", flat=True))
         self.assertEqual(slugs, ["newer", "older"])
 
-    def test_is_published_defaults_to_true(self):
+    def test_status_defaults_to_published(self):
         article = make_article()
-        self.assertTrue(article.is_published)
+        self.assertEqual(article.status, Article.Status.PUBLISHED)
 
     def test_is_featured_defaults_to_false(self):
         article = make_article()

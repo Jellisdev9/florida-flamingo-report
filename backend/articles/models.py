@@ -9,6 +9,11 @@ class Article(models.Model):
         DEVELOPMENT = "DEVELOPMENT", "Development"
         MARKET_PULSE = "MARKET_PULSE", "Market Pulse"
 
+    class Status(models.TextChoices):
+        DRAFT = "DRAFT", "Draft"
+        PENDING_REVIEW = "PENDING_REVIEW", "Pending Review"
+        PUBLISHED = "PUBLISHED", "Published"
+
     slug = models.SlugField(unique=True)
     title = models.CharField(max_length=255)
     headline = models.CharField(max_length=500)
@@ -21,7 +26,13 @@ class Article(models.Model):
     hero_image_url = models.URLField(blank=True)
     published_date = models.DateField()
     is_featured = models.BooleanField(default=False)
-    is_published = models.BooleanField(default=True)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.PUBLISHED
+    )
+    # Attribution for auto-generated/scraped content — blank for
+    # hand-written articles.
+    source_url = models.URLField(blank=True)
+    source_name = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
