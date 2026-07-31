@@ -17,6 +17,11 @@ class NotableSale(models.Model):
         COMMERCIAL = "COMMERCIAL", "Commercial"
         SINGLE_FAMILY = "SINGLE_FAMILY", "Single Family"
 
+    class Status(models.TextChoices):
+        DRAFT = "DRAFT", "Draft"
+        PENDING_REVIEW = "PENDING_REVIEW", "Pending Review"
+        PUBLISHED = "PUBLISHED", "Published"
+
     slug = models.SlugField(unique=True)
     title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=14, decimal_places=2)
@@ -34,6 +39,13 @@ class NotableSale(models.Model):
     beds = models.PositiveSmallIntegerField(null=True, blank=True)
     baths = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
     sq_ft = models.PositiveIntegerField(null=True, blank=True)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.PUBLISHED
+    )
+    # Attribution for auto-generated/scraped sale records — blank for
+    # hand-entered ones.
+    source_url = models.URLField(blank=True)
+    source_name = models.CharField(max_length=255, blank=True)
 
     class Meta:
         ordering = ["-close_date", "-price"]

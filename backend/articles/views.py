@@ -97,7 +97,9 @@ def home_view(request):
         pk=featured.pk if featured else None
     )[:5]
 
-    closings = NotableSale.objects.order_by("-price")[:2]
+    closings = NotableSale.objects.filter(
+        status=NotableSale.Status.PUBLISHED
+    ).order_by("-price")[:2]
     neighborhoods = NeighborhoodIntel.objects.all()[:3]
 
     # session.pop() reads and deletes the flag in one call — prevents it

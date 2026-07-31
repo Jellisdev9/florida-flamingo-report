@@ -19,7 +19,7 @@ from market.models import MarketMetric, FastestGrowingMarket, Agent
 # ── DRF API views (unchanged) ─────────────────────────────────────────────────
 
 class NotableSaleListView(generics.ListAPIView):
-    queryset = NotableSale.objects.all()
+    queryset = NotableSale.objects.filter(status=NotableSale.Status.PUBLISHED)
     serializer_class = NotableSaleListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["region", "property_type"]
@@ -27,7 +27,9 @@ class NotableSaleListView(generics.ListAPIView):
 
 @api_view(["GET"])
 def featured_sale(request):
-    sale = NotableSale.objects.filter(is_featured=True).first()
+    sale = NotableSale.objects.filter(
+        is_featured=True, status=NotableSale.Status.PUBLISHED
+    ).first()
     if not sale:
         raise NotFound("No featured sale found.")
     return Response(NotableSaleSerializer(sale).data)
@@ -35,7 +37,7 @@ def featured_sale(request):
 
 @api_view(["GET"])
 def top_closings(request):
-    sales = NotableSale.objects.order_by("-price")[:5]
+    sales = NotableSale.objects.filter(status=NotableSale.Status.PUBLISHED).order_by("-price")[:5]
     return Response(NotableSaleListSerializer(sales, many=True).data)
 
 
@@ -74,15 +76,19 @@ def notable_sales_view(request):
     # e.g. for ?region=ORLANDO, request.GET.get('region') returns 'ORLANDO'
     region = request.GET.get("region")
 
-    featured = NotableSale.objects.filter(is_featured=True).first()
+    featured = NotableSale.objects.filter(
+        is_featured=True, status=NotableSale.Status.PUBLISHED
+    ).first()
 
-    sales = NotableSale.objects.all()
+    sales = NotableSale.objects.filter(status=NotableSale.Status.PUBLISHED)
     # Only apply the filter if the region code is a known valid value
     if region and region in REGION_MAP:
         sales = sales.filter(region=region)
     sales = sales[:20]
 
-    top_closings = NotableSale.objects.order_by("-price")[:5]
+    top_closings = NotableSale.objects.filter(
+        status=NotableSale.Status.PUBLISHED
+    ).order_by("-price")[:5]
     fastest_growing = FastestGrowingMarket.objects.order_by("rank")[:5]
     market_metrics = MarketMetric.objects.all()[:5]
     top_agents = Agent.objects.order_by("rank")[:5]

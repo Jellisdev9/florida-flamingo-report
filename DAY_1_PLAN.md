@@ -15,26 +15,51 @@ a box you already checked.
 
 ---
 
-### articles/Article (15 min)
+### articles/Article (15 min) — DONE
 
-- [ ] Open `backend/articles/models.py`
-- [ ] Read the `Article` model top to bottom, once, no editing
-- [ ] Answer one question only: **does a real article need a meta
-      description / SEO field that isn't there?** (yes/no — write it
-      down here, don't fix it yet)
-      - Answer:
-- [ ] Answer one question only: **`hero_image_url` — stay as a plain
-      URL field, or switch to uploaded images later?** (pick one, write
-      it down, don't implement)
-      - Answer:
+- [x] Open `backend/articles/models.py`
+- [x] Read the `Article` model top to bottom, once, no editing
+- [x] SEO/meta description field? — **Deferred**, not decided yet.
+- [x] `hero_image_url` — **Stays a URL field.** Content is coming from
+      an automated scrape/generate pipeline, so the pipeline supplies
+      an image URL directly rather than you uploading through admin.
+- [x] **New context surfaced mid-review**: this site is meant to be
+      largely self-populating — an external API will scrape sources
+      and generate articles, with you as editor. That changed the
+      real question from "is anything missing" to "does the schema
+      support a review workflow." It does now:
+      - Added `Article.status` (`DRAFT` / `PENDING_REVIEW` /
+        `PUBLISHED`) replacing the old flat `is_published` boolean.
+        Default stays `PUBLISHED` (matches old behavior for
+        hand-written/admin articles); the automation pipeline should
+        set `PENDING_REVIEW` explicitly so nothing goes live without
+        your approval.
+      - Added `source_url` + `source_name` for attribution on
+        scraped/generated articles.
+      - Migration applied, fixtures updated, all 77 tests still pass,
+        live site re-verified. Committed as `0113b5a`.
 
-### sales/NotableSale (15 min)
+### sales/NotableSale (15 min) — DONE
 
-- [ ] Open `backend/sales/models.py`
-- [ ] Read the `NotableSale` model top to bottom, once, no editing
-- [ ] Same two questions as above, applied to this model:
-      - SEO/meta field needed? Answer:
-      - `hero_image_url` decision (should match your Article answer): Answer:
+- [x] Open `backend/sales/models.py`
+- [x] Read the `NotableSale` model top to bottom, once, no editing
+- [x] SEO/meta field needed? — Deferred, same as Article.
+- [x] `hero_image_url` — stays a URL field, matching Article.
+- [x] **Bigger finding**: unlike `Article`, this model had **no publish
+      gate at all** — every row in the DB was always shown on the site,
+      with no draft/review concept whatsoever. That's a bigger risk
+      than Article's old boolean, once sale data starts arriving from
+      a scrape/generate pipeline (bad price/address data would go
+      straight to production).
+      - Added `NotableSale.status` (`DRAFT`/`PENDING_REVIEW`/`PUBLISHED`),
+        default `PUBLISHED` to preserve current always-shown behavior
+        for hand-entered sales.
+      - Added `source_url`/`source_name` for attribution.
+      - Gated every query that reads `NotableSale` (list API, featured,
+        top-closings, the sales grid, the homepage closings widget) to
+        `status=PUBLISHED`.
+      - Migration applied, fixtures reloaded, all 77 tests pass, live
+        site re-verified.
 
 ### market/* (10 min)
 

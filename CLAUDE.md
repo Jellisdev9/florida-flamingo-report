@@ -69,7 +69,8 @@ Manages editorial article content.
 
 ### sales/
 Manages notable property sales.
-- **Model:** `NotableSale` — slug, title, price, location, city, region, property_type, close_date, hero_image_url, is_featured, article (FK), brokerage, beds, baths, sq_ft
+- **Model:** `NotableSale` — slug, title, price, location, city, region, property_type, close_date, hero_image_url, is_featured, article (FK), brokerage, beds, baths, sq_ft, status, source_url, source_name
+- **Status/source:** same editorial-workflow pattern as `Article` (see above) — added because this model previously had **no publish gate at all** (every row was always shown), which is riskier than `Article`'s old boolean once sale records start arriving from an automated pipeline.
 - **Regions:** SOUTH_FLORIDA, TAMPA_BAY, ORLANDO, JACKSONVILLE, PANHANDLE
 - **Types:** WATERFRONT_ESTATE, CONDO_PENTHOUSE, CONDO_RESIDENCE, COMMERCIAL, SINGLE_FAMILY
 
