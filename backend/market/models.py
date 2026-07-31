@@ -9,6 +9,9 @@ class MarketMetric(models.Model):
     is_positive = models.BooleanField(default=True)
     sort_order = models.PositiveSmallIntegerField(default=0)
     updated_at = models.DateTimeField(auto_now=True)
+    # Attribution for auto-generated/scraped data — blank for hand-entered.
+    source_url = models.URLField(blank=True)
+    source_name = models.CharField(max_length=255, blank=True)
 
     class Meta:
         ordering = ["sort_order"]
@@ -24,6 +27,8 @@ class Agent(models.Model):
     rank = models.PositiveSmallIntegerField()
     period_month = models.PositiveSmallIntegerField()
     period_year = models.PositiveSmallIntegerField()
+    source_url = models.URLField(blank=True)
+    source_name = models.CharField(max_length=255, blank=True)
 
     class Meta:
         ordering = ["rank"]
@@ -46,6 +51,8 @@ class NeighborhoodIntel(models.Model):
     tag = models.CharField(max_length=10, choices=Tag.choices)
     sort_order = models.PositiveSmallIntegerField(default=0)
     updated_at = models.DateTimeField(auto_now=True)
+    source_url = models.URLField(blank=True)
+    source_name = models.CharField(max_length=255, blank=True)
 
     class Meta:
         ordering = ["sort_order"]
@@ -58,6 +65,8 @@ class FastestGrowingMarket(models.Model):
     location = models.CharField(max_length=100)
     change_display = models.CharField(max_length=20)
     rank = models.PositiveSmallIntegerField(unique=True)
+    source_url = models.URLField(blank=True)
+    source_name = models.CharField(max_length=255, blank=True)
 
     class Meta:
         ordering = ["rank"]

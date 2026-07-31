@@ -61,15 +61,23 @@ a box you already checked.
       - Migration applied, fixtures reloaded, all 77 tests pass, live
         site re-verified.
 
-### market/* (10 min)
+### market/* (10 min) — DONE
 
-- [ ] Open `backend/market/models.py`
-- [ ] Read `MarketMetric`, `Agent`, `NeighborhoodIntel`,
+- [x] Open `backend/market/models.py`
+- [x] Read `MarketMetric`, `Agent`, `NeighborhoodIntel`,
       `FastestGrowingMarket` — four short models, back to back
-- [ ] One question: **is there any field you keep wanting to type into
-      Django admin that doesn't exist yet?** Write it down if so,
-      otherwise write "none":
-      - Answer:
+- [x] Missing field? — **Decision: skip the `status` workflow on
+      these.** They're short numeric widget values, not long-form
+      content — a wrong ticker number is low-stakes and trivially
+      fixable, unlike a fabricated article or sale. Added
+      `source_url`/`source_name` to all four for attribution only.
+      Migration applied, tests pass, live site re-verified.
+- [x] **Open gap, not yet fixed**: `FastestGrowingMarket.rank` is
+      globally unique with no period field, unlike `Agent`
+      (`unique_together = [rank, period_month, period_year]`).
+      Refreshing it periodically will hit a unique-constraint error.
+      Needs a decision later: add period fields to match `Agent`, or
+      delete-and-replace on refresh.
 
 ### subscribers/Subscriber (5 min)
 

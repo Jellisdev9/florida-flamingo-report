@@ -80,6 +80,8 @@ Manages all market data widgets shown in the header strip and sidebars.
 - **Model:** `Agent` — top agents leaderboard (name, location, volume_display, rank, period_month/year)
 - **Model:** `NeighborhoodIntel` — neighborhood watch cards (neighborhood, city, description, tag: HOT/RISING/COOLING)
 - **Model:** `FastestGrowingMarket` — fastest growing markets sidebar (location, change_display, rank)
+- All four models have `source_url`/`source_name` for attribution, same as `Article`/`NotableSale`. **No `status` field here on purpose** — these are short numeric widget values (ticker tiles, rankings), not long-form content, so the risk of a bad scraped number going live immediately is low and easily corrected. Revisit if that judgment call turns out wrong.
+- **Known gap, not yet fixed:** `FastestGrowingMarket.rank` is globally unique with no period field, unlike `Agent` (`unique_together = [rank, period_month, period_year]`). Refreshing it periodically will hit a unique-constraint error unless old rows are deleted first, or it gets period fields added to match `Agent`.
 
 ### subscribers/
 Manages newsletter subscriptions.
