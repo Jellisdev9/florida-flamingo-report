@@ -56,3 +56,7 @@ backend/db.sqlite3
 backend/.env
 backend/tailwindcss
 backend/staticfiles/
+
+# Local-only planning/scratch docs — not durable project docs like
+# BUILD_PLAN.md, still being figured out, not meant to be committed.
+planning-archive/

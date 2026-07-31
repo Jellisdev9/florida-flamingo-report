@@ -20,15 +20,13 @@ Covers notable sales, agent moves, market trends, neighborhoods, luxury closings
 - django-cors-headers, django-filter
 - PostgreSQL (prod) / SQLite (dev)
 - python-dotenv
-- Tailwind CSS via the standalone CLI binary (`backend/tailwindcss`, gitignored — re-download per BUILD_PLAN.md Step 3)
+- Tailwind CSS via the standalone CLI binary (`backend/tailwindcss`, gitignored — re-download command below)
 
 ## Project Structure
 
 ```
 florida-front-end/
 ├── CLAUDE.md
-├── BUILD_PLAN.md                   # order-of-operations for the Django rebuild
-├── DJANGO_TEMPLATES_PLAN.md        # full template/view code reference
 ├── backend/                        # Django project root
 │   ├── manage.py
 │   ├── pyproject.toml              # uv-managed deps
@@ -130,7 +128,7 @@ uv run python manage.py createsuperuser
 # Seed mock data (after migrations)
 uv run python manage.py loaddata fixtures/initial_data.json
 
-# Tailwind CSS — standalone binary, no Node required (see BUILD_PLAN.md Step 3)
+# Tailwind CSS — standalone binary, no Node required
 curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
 chmod +x tailwindcss-linux-x64
 mv tailwindcss-linux-x64 tailwindcss
