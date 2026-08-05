@@ -1,4 +1,4 @@
-# Florida Property Review
+# Florida Flamingo Report
 
 Editorial/business-news style real estate publication focused on Florida real estate.
 Covers notable sales, agent moves, market trends, neighborhoods, luxury closings, and development news.
@@ -25,7 +25,7 @@ Covers notable sales, agent moves, market trends, neighborhoods, luxury closings
 ## Project Structure
 
 ```
-florida-front-end/
+florida-flamingo-report/
 ├── CLAUDE.md
 ├── backend/                        # Django project root
 │   ├── manage.py
