@@ -1,5 +1,5 @@
 """
-Root URL configuration for the Florida Property Review backend.
+Root URL configuration for the Florida Flamingo Report backend.
 
 URL routing works like a switch statement — Django checks each path() in
 order and calls the view function for the first match.
