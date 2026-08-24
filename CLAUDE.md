@@ -197,6 +197,26 @@ Cycle for every endpoint, model, or view change:
 - Third-party library behavior
 - Trivial getters with no logic
 
+## Deployment strategy
+
+Local → production directly, no persistent staging environment
+(solo project, no team to coordinate, no payments/compliance
+exposure — revisit if any of that changes). What replaces the safety
+a staging environment would give: build the full production topology
+(gunicorn + nginx + real TLS) locally first and verify it thoroughly
+before provisioning a VPS. nginx is not VPS-specific — it's just a
+Linux service, so it runs locally too (`mkcert` for local TLS,
+swapped for `certbot`/Let's Encrypt once a real domain exists).
+
 ## Next Steps
 
-- [ ] Production: add gunicorn + nginx config, PostgreSQL setup
+- [ ] Set up nginx + TLS locally (reverse-proxying gunicorn) to
+      finish mirroring the production topology on the dev machine
+      before any VPS work
+- [ ] Add a CI test gate (GitHub Actions running `manage.py test` on
+      push/PR) — nothing currently stops a broken commit from being
+      deployable
+- [ ] Decide a Postgres backup approach for production — not yet
+      planned
+- [ ] Production: VPS + domain + nginx config (reusing the local
+      config) + PostgreSQL setup
