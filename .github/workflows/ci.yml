@@ -63,14 +63,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set lowercase image name
+        # GHCR rejects uppercase in image refs; github.repository_owner
+        # preserves the GitHub username's casing (e.g. "Jellisdev9"), so
+        # it has to be lowercased before use in a tag.
+        run: echo "IMAGE_NAME=$(echo ghcr.io/${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
           context: ./backend
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/florida-flamingo-report:latest
-            ghcr.io/${{ github.repository_owner }}/florida-flamingo-report:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
 
   deploy:
     needs: test
