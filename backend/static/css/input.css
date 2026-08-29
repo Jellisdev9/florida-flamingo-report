@@ -1,6 +1,16 @@
 /* Tailwind v4 — replaces the old @tailwind base/components/utilities directives */
 @import "tailwindcss";
 
+/* Typography plugin — powers the `prose`/`prose-lg` classes used on the
+   About page and article bodies. Was referenced in templates but never
+   actually registered here, so those classes generated no CSS at all
+   and rendered with raw browser-default spacing/list markers — most
+   visible on About's headings/bullet list, less so on article bodies
+   (mostly plain paragraphs via linebreaksbr, so the missing polish was
+   easy to miss). The standalone Tailwind CLI bundles this plugin —
+   no separate npm install needed. */
+@plugin "@tailwindcss/typography";
+
 /* Tell Tailwind v4 where to scan for class names. Path is relative to this file. */
 @source "../../templates";
 
