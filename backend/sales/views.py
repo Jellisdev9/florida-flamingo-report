@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from django_filters.rest_framework import DjangoFilterBackend
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
 from .models import NotableSale
@@ -119,3 +119,29 @@ def notable_sales_view(request):
         "region_map": REGION_MAP,
     }
     return render(request, "notable_sales.html", context)
+
+
+def sale_detail_view(request, slug):
+    """
+    Renders /notable-sales/<slug>/ — an individual sale's detail page.
+
+    Previously didn't exist at all: NotableSale.slug was defined on the
+    model but nothing routed to it, so grid cards, the featured-sale
+    hero, and the Top Closings sidebar were all dead ends. sale.article
+    is optional (most sales have no full editorial write-up — only 1 of
+    8 in the fixture data does), so the template shows a link to it
+    only when set.
+    """
+    sale = get_object_or_404(NotableSale, slug=slug, status=NotableSale.Status.PUBLISHED)
+
+    market_metrics = MarketMetric.objects.all()[:5]
+    top_agents = Agent.objects.order_by("rank")[:5]
+    subscribed = request.session.pop("subscribed", False)
+
+    context = {
+        "market_metrics": market_metrics,
+        "top_agents": top_agents,
+        "sale": sale,
+        "subscribed": subscribed,
+    }
+    return render(request, "notable_sale_detail.html", context)
