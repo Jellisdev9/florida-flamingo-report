@@ -38,9 +38,18 @@
 
         {% comment %}
         Navigation — request.resolver_match.url_name gives us the current URL name
-        so we can highlight the active nav link without any JavaScript
+        so we can highlight the active nav link without any JavaScript.
+
+        flex-wrap instead of horizontal scroll: with 7 links, the nav doesn't
+        reliably fit on one line even on many desktop widths, not just mobile.
+        Hiding the scrollbar (an earlier attempt at this) only hid the
+        indicator that content overflowed — items past the edge, including
+        "About" (the last one), could still end up clipped with no visible
+        way to reach them. Wrapping onto a second line keeps every link
+        visible and reachable at any width, which a hidden scrollbar can't
+        guarantee.
         {% endcomment %}
-        <nav class="flex items-center gap-6 whitespace-nowrap text-sm font-medium overflow-x-auto no-scrollbar">
+        <nav class="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 whitespace-nowrap text-sm font-medium">
           <a href="/"
              class="{% if request.resolver_match.url_name == 'home' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
             Home
