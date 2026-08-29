@@ -57,6 +57,9 @@ backend/.env
 backend/tailwindcss
 backend/staticfiles/
 
+# Docker Compose var-substitution file (DB_NAME/USER/PASSWORD, SITE_ADDRESS)
+/.env
+
 # Local-only planning/scratch docs — not durable project docs like
 # BUILD_PLAN.md, still being figured out, not meant to be committed.
 # planning/ holds the active spec + structural docs; planning-archive/ is

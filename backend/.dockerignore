@@ -1,0 +1,9 @@
+.venv/
+staticfiles/
+db.sqlite3
+.env
+tailwindcss
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/

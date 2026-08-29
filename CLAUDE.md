@@ -22,6 +22,11 @@ Covers notable sales, agent moves, market trends, neighborhoods, luxury closings
 - python-dotenv
 - Tailwind CSS via the standalone CLI binary (`backend/tailwindcss`, gitignored — re-download command below)
 
+### Deployment
+- Docker Compose: `web` (gunicorn), `db` (Postgres), `caddy` (reverse proxy + TLS)
+- Caddy — automatic TLS (internal CA locally, Let's Encrypt in production) from one `Caddyfile`
+- GitHub Actions — test gate + image build/push to GHCR (`.github/workflows/ci.yml`)
+
 ## Project Structure
 
 ```
@@ -146,6 +151,12 @@ uv run python manage.py test articles # single app
 uv add <package>
 ```
 
+Before pushing, verify against the same stack that runs in production:
+
+```bash
+docker compose up --build   # from the repo root — web + Postgres + Caddy
+```
+
 `manage.py` defaults `DJANGO_SETTINGS_MODULE` to `backend.settings.development`, and `development.py` hardcodes SQLite with no required secrets — the server runs even without a `.env` file present, though one should still be created for `SECRET_KEY` and other overrides.
 
 ## Environment Variables
@@ -199,24 +210,52 @@ Cycle for every endpoint, model, or view change:
 
 ## Deployment strategy
 
-Local → production directly, no persistent staging environment
-(solo project, no team to coordinate, no payments/compliance
-exposure — revisit if any of that changes). What replaces the safety
-a staging environment would give: build the full production topology
-(gunicorn + nginx + real TLS) locally first and verify it thoroughly
-before provisioning a VPS. nginx is not VPS-specific — it's just a
-Linux service, so it runs locally too (`mkcert` for local TLS,
-swapped for `certbot`/Let's Encrypt once a real domain exists).
+Local → CI test gate → manual-triggered deploy, no persistent staging
+environment (solo project, no team to coordinate, no
+payments/compliance exposure — revisit if any of that changes). CI
+(GitHub Actions, `.github/workflows/ci.yml`) is what replaces the
+safety a staging environment would give: every push/PR to `main` runs
+the full test suite against a real Postgres service container.
+
+This project is one of several (~20 apps planned over a short window)
+meant to share **one VPS** rather than each getting its own — at this
+traffic level, per-app instances would mean paying for isolation none
+of them need yet. Each app is containerized identically: a
+`Dockerfile` + `docker-compose.yml` (Django/gunicorn + Postgres +
+Caddy) that runs unchanged on the dev machine and on the VPS. Caddy
+replaces nginx+`mkcert`: it auto-detects `localhost`/an IP vs. a real
+domain and switches between its internal self-signed CA and real
+Let's Encrypt automatically, from the same `Caddyfile`, via one
+`SITE_ADDRESS` env var — no separate local-TLS tooling needed.
+
+Caddy is currently bundled per-app (this repo's own `docker-compose.yml`
+runs its own Caddy on 80/443), **not** yet extracted into shared
+multi-app infra — that refactor is deliberately deferred until a
+second app actually needs to share the VPS's ports 80/443, not built
+speculatively now.
+
+On every push to `main`, CI runs tests and — if green — builds the
+Docker image and pushes it to GHCR
+(`ghcr.io/<owner>/florida-flamingo-report`). Actually rolling that
+image out to the VPS is a separate, manually-triggered step
+(`workflow_dispatch` in the same workflow, SSHes in and runs
+`docker compose pull && docker compose up -d`) rather than
+auto-deploying on every push — kept manual until the pipeline is
+proven.
+
+Local dev (`manage.py runserver` + SQLite) is unchanged for the fast
+iteration loop. `docker compose up --build` (the same stack that runs
+on the VPS) is the final pre-ship verification step, run before
+pushing.
 
 ## Next Steps
 
-- [ ] Set up nginx + TLS locally (reverse-proxying gunicorn) to
-      finish mirroring the production topology on the dev machine
-      before any VPS work
-- [ ] Add a CI test gate (GitHub Actions running `manage.py test` on
-      push/PR) — nothing currently stops a broken commit from being
-      deployable
+- [ ] Provision the shared VPS (recommended: Hetzner CX32, ~$9/mo)
+- [ ] Add `VPS_HOST` / `VPS_USER` / `VPS_SSH_KEY` repo secrets once
+      the VPS exists, so the `deploy` job in
+      `.github/workflows/ci.yml` can actually run
 - [ ] Decide a Postgres backup approach for production — not yet
       planned
-- [ ] Production: VPS + domain + nginx config (reusing the local
-      config) + PostgreSQL setup
+- [ ] First real deploy: `git clone` this repo onto the VPS at
+      `/opt/florida-flamingo-report`, set `SITE_ADDRESS` to the real
+      domain in its root `.env`, `docker compose up -d`
