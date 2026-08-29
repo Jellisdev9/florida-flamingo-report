@@ -107,7 +107,10 @@
         <div class="bg-[#0d1b2a] text-white font-bold text-xl px-2 py-1 flex items-center justify-center h-10 w-10">FFR</div>
         <span class="font-serif font-bold text-lg">Florida Flamingo Report</span>
       </div>
-      <div class="text-sm text-gray-500">&copy; 2024 Florida Flamingo Report. All rights reserved.</div>
+      <div class="flex items-center gap-4 text-sm text-gray-500">
+        <span>&copy; 2024 Florida Flamingo Report. All rights reserved.</span>
+        <a href="{% url 'unsubscribe' %}" class="hover:text-gray-700 underline">Unsubscribe</a>
+      </div>
     </div>
   </footer>
   <!-- ===== END FOOTER ===== -->

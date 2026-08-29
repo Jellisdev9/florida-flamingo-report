@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
 from .models import Subscriber
@@ -61,3 +61,23 @@ def subscribe_view(request):
 
     # redirect() returns a 302 response sending the browser to next_url
     return redirect(next_url)
+
+
+def unsubscribe_view(request):
+    """
+    Handles /unsubscribe/ — a self-service page, not a link with a token.
+
+    GET shows the "enter your email" form. POST deactivates any matching
+    Subscriber and shows the same confirmation either way, whether or not
+    the email was ever on the list — this avoids using the page to probe
+    which emails are subscribed. No ownership verification is required
+    here, matching subscribe_view's own trust model (subscribing doesn't
+    require proving you own the email either).
+    """
+    submitted = False
+    if request.method == "POST":
+        email = request.POST.get("email", "").lower().strip()
+        Subscriber.objects.filter(email=email).update(is_active=False)
+        submitted = True
+
+    return render(request, "unsubscribe.html", {"submitted": submitted})

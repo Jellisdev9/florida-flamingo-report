@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Unsubscribe — Florida Flamingo Report{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="w-full bg-white border-b border-gray-200 py-8 px-4 md:px-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="font-serif text-4xl md:text-5xl font-bold text-[#0d1b2a]">Unsubscribe</h1>
+    <p class="text-lg text-gray-500 mt-2">Sorry to see you go.</p>
+  </div>
+</div>
+
+<main class="flex-1 w-full max-w-xl mx-auto px-4 md:px-8 py-16">
+  <div class="bg-white border border-gray-200 rounded-sm shadow-sm p-8 text-center">
+    {% if submitted %}
+      <p class="font-serif text-2xl font-bold text-[#0d1b2a] mb-3">You've been unsubscribed</p>
+      <p class="text-gray-600">
+        If that email was on our list, you won't hear from us again.
+        You can always <a href="{% url 'home' %}" class="text-[#0f4c5c] font-bold underline">resubscribe</a> later.
+      </p>
+    {% else %}
+      <p class="text-gray-600 mb-6">
+        Enter the email address you subscribed with, and we'll remove it from our list.
+      </p>
+      <form method="POST" action="{% url 'unsubscribe' %}" class="flex flex-col gap-3">
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="Email address" required
+               class="w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#0f4c5c] text-sm" />
+        <button type="submit"
+                class="w-full bg-[#0d1b2a] text-white font-bold py-3 rounded-sm hover:bg-gray-800 transition-colors text-sm">
+          UNSUBSCRIBE
+        </button>
+      </form>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

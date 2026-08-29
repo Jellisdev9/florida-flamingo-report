@@ -37,3 +37,51 @@ class SubscribeViewTest(TestCase):
         )
         # Should still redirect (302), not crash (500)
         self.assertEqual(response.status_code, 302)
+
+
+# ── Unsubscribe ────────────────────────────────────────────────────────────────
+
+class UnsubscribeViewTest(TestCase):
+    """
+    Tests for /unsubscribe/ — the self-service unsubscribe page.
+
+    Mirrors subscribe's trust model: no email ownership verification is
+    required to subscribe, so none is required to unsubscribe either.
+    """
+
+    def test_get_returns_200(self):
+        response = self.client.get(reverse("unsubscribe"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_uses_correct_template(self):
+        response = self.client.get(reverse("unsubscribe"))
+        self.assertTemplateUsed(response, "unsubscribe.html")
+        self.assertTemplateUsed(response, "base.html")
+
+    def test_get_does_not_show_confirmation(self):
+        response = self.client.get(reverse("unsubscribe"))
+        self.assertNotContains(response, "You've been unsubscribed")
+
+    def test_post_deactivates_matching_subscriber(self):
+        subscriber = Subscriber.objects.create(email="active@example.com")
+        self.client.post(reverse("unsubscribe"), {"email": "active@example.com"})
+        subscriber.refresh_from_db()
+        self.assertFalse(subscriber.is_active)
+
+    def test_post_shows_confirmation(self):
+        Subscriber.objects.create(email="active@example.com")
+        response = self.client.post(reverse("unsubscribe"), {"email": "active@example.com"})
+        self.assertContains(response, "You've been unsubscribed")
+
+    def test_post_with_unknown_email_does_not_error(self):
+        # No matching Subscriber — should still show the same confirmation,
+        # not leak whether the email was ever on the list.
+        response = self.client.post(reverse("unsubscribe"), {"email": "never-subscribed@example.com"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "You've been unsubscribed")
+
+    def test_post_is_case_insensitive(self):
+        subscriber = Subscriber.objects.create(email="mixedcase@example.com")
+        self.client.post(reverse("unsubscribe"), {"email": "MixedCase@Example.com"})
+        subscriber.refresh_from_db()
+        self.assertFalse(subscriber.is_active)

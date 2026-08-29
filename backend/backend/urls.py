@@ -15,7 +15,7 @@ from django.http import JsonResponse
 from articles.views import home_view, article_detail_view, about_view
 from sales.views import notable_sales_view
 from market.views import market_pulse_view, agents_view, neighborhoods_view
-from subscribers.views import subscribe_view
+from subscribers.views import subscribe_view, unsubscribe_view
 
 
 def health_check(request):
@@ -64,4 +64,7 @@ urlpatterns = [
 
     # Newsletter subscribe — POST only (the view enforces this with @require_POST)
     path("subscribe/", subscribe_view, name="subscribe"),
+
+    # Newsletter unsubscribe — self-service page, GET shows the form, POST processes it
+    path("unsubscribe/", unsubscribe_view, name="unsubscribe"),
 ]
