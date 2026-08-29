@@ -8,18 +8,29 @@ We keep all existing /api/ routes intact (the DRF API is still useful for
 mobile/RSS/future use) and add the new template-rendered page URLs below them.
 """
 from django.contrib import admin
-from django.urls import path, include
-from django.http import JsonResponse
+from django.contrib.sitemaps.views import sitemap
+from django.urls import path, include, reverse
+from django.http import HttpResponse, JsonResponse
 
 # Import the template views — these render HTML pages
 from articles.views import home_view, article_detail_view, article_archive_view, about_view
 from sales.views import notable_sales_view, sale_detail_view
 from market.views import market_pulse_view, agents_view, neighborhoods_view
 from subscribers.views import subscribe_view, unsubscribe_view
+from .sitemaps import sitemaps
 
 
 def health_check(request):
     return JsonResponse({"status": "ok"})
+
+
+def robots_txt(request):
+    # Built from the request rather than a hardcoded domain, so it's
+    # correct on localhost, staging-like environments, and production
+    # alike without needing a SITE_ADDRESS-style setting of its own.
+    sitemap_url = request.build_absolute_uri(reverse("sitemap"))
+    content = f"User-agent: *\nAllow: /\n\nSitemap: {sitemap_url}\n"
+    return HttpResponse(content, content_type="text/plain")
 
 
 urlpatterns = [
@@ -28,6 +39,10 @@ urlpatterns = [
 
     # ── Health check ──────────────────────────────────────────────────────────
     path("api/healthz/", health_check),
+
+    # ── SEO ───────────────────────────────────────────────────────────────────
+    path("robots.txt", robots_txt),
+    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
 
     # ── DRF API routes (kept — costs nothing, useful for mobile/RSS later) ───
     # include() pulls in the urlpatterns list from each app's urls.py

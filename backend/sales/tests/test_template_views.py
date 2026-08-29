@@ -154,3 +154,8 @@ class SaleDetailViewTest(TestCase):
         # self.sale has no linked article — shouldn't render a link to nothing
         response = self.client.get(reverse("sale_detail", args=["my-sale"]))
         self.assertNotContains(response, "Read the Full Story")
+
+    def test_meta_description_uses_sale_details(self):
+        response = self.client.get(reverse("sale_detail", args=["my-sale"]))
+        self.assertContains(response, "My Sale")
+        self.assertContains(response, self.sale.price_display)

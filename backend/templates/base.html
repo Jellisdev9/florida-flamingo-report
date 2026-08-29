@@ -4,8 +4,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  {# {% block title %} lets child templates override the page title #}
+  {% comment %}
+  {% block title %} lets child templates override the page title — the
+  one legitimate use of a block here, since it's only ever rendered
+  once (Django doesn't allow the same block name twice in one
+  template, and {# #} comments can't span multiple lines either —
+  learned that one the hard way). Everything below is a plain context
+  variable instead, so the same value can be reused in multiple tags
+  without hitting that limit — optional, with sane defaults via the
+  `default` filter for any page that doesn't pass one.
+  {% endcomment %}
   <title>{% block title %}Florida Flamingo Report{% endblock %}</title>
+
+  <meta name="description" content="{{ meta_description|default:'Notable sales, agent moves, market trends, and neighborhood intelligence across Florida.' }}" />
+
+  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml" />
+  <link rel="icon" href="{% static 'favicon.ico' %}" sizes="any" />
+  <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}" />
+
+  {# Open Graph — controls how links look when shared on Slack/Facebook/etc. #}
+  <meta property="og:site_name" content="Florida Flamingo Report" />
+  <meta property="og:type" content="{{ og_type|default:'website' }}" />
+  <meta property="og:title" content="{{ page_title|default:'Florida Flamingo Report' }}" />
+  <meta property="og:description" content="{{ meta_description|default:'Notable sales, agent moves, market trends, and neighborhood intelligence across Florida.' }}" />
+  {% if og_image %}
+  <meta property="og:image" content="{{ og_image }}" />
+  {% else %}
+  <meta property="og:image" content="https://{{ request.get_host }}{% static 'og-image.png' %}" />
+  {% endif %}
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+
+  {# Twitter Card — same content, Twitter's own meta tag names #}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ page_title|default:'Florida Flamingo Report' }}" />
+  <meta name="twitter:description" content="{{ meta_description|default:'Notable sales, agent moves, market trends, and neighborhood intelligence across Florida.' }}" />
+  {% if og_image %}
+  <meta name="twitter:image" content="{{ og_image }}" />
+  {% else %}
+  <meta name="twitter:image" content="https://{{ request.get_host }}{% static 'og-image.png' %}" />
+  {% endif %}
 
   {# Google Fonts — same two fonts as the React app #}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
