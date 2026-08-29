@@ -143,5 +143,10 @@ def sale_detail_view(request, slug):
         "top_agents": top_agents,
         "sale": sale,
         "subscribed": subscribed,
+        # Social-sharing meta tags (base.html) — real content instead of
+        # the sitewide default.
+        "page_title": sale.title,
+        "meta_description": f"{sale.title} — {sale.price_display} in {sale.city}, FL.",
+        "og_image": sale.hero_image_url or None,
     }
     return render(request, "notable_sale_detail.html", context)

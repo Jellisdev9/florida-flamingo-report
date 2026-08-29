@@ -140,6 +140,13 @@ def article_detail_view(request, slug):
         **_base_context(),
         "article": article,
         "related": related,
+        # Social-sharing meta tags (base.html) — real content instead of
+        # the sitewide default, since these are the pages most likely to
+        # actually get shared.
+        "page_title": article.headline,
+        "meta_description": article.subheadline or article.headline,
+        "og_type": "article",
+        "og_image": article.hero_image_url or None,
     }
     return render(request, "article_detail.html", context)
 

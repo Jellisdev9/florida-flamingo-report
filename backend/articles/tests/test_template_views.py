@@ -236,3 +236,83 @@ class ArticleArchiveViewTest(TestCase):
 
         page_2 = self.client.get(reverse("article_archive") + "?page=2")
         self.assertEqual(len(page_2.context["page_obj"]), 1)
+
+
+# ── SEO: favicon, meta tags, robots.txt, sitemap.xml ────────────────────────
+
+class SEOTest(TestCase):
+    """
+    Site-wide SEO/sharing basics: favicon links, meta description +
+    Open Graph/Twitter tags, robots.txt, sitemap.xml. Lives here
+    alongside BaseTemplateTest/ErrorPagesTest as the home for
+    site-wide/base.html-level checks not owned by one specific app.
+    """
+
+    def test_favicon_links_present(self):
+        response = self.client.get(reverse("home"))
+        self.assertContains(response, "favicon.svg")
+        self.assertContains(response, "favicon.ico")
+        self.assertContains(response, "apple-touch-icon.png")
+
+    def test_default_meta_description_present(self):
+        response = self.client.get(reverse("home"))
+        self.assertContains(response, '<meta name="description" content="Notable sales, agent moves')
+
+    def test_og_and_twitter_tags_present(self):
+        response = self.client.get(reverse("home"))
+        self.assertContains(response, 'property="og:title"')
+        self.assertContains(response, 'property="og:description"')
+        self.assertContains(response, 'property="og:image"')
+        self.assertContains(response, 'property="og:url"')
+        self.assertContains(response, 'name="twitter:card" content="summary_large_image"')
+
+    def test_article_detail_overrides_meta_description(self):
+        make_article(
+            slug="meta-article", headline="Meta Headline",
+            subheadline="A specific subheadline for sharing.",
+        )
+        response = self.client.get(reverse("article_detail", args=["meta-article"]))
+        self.assertContains(response, "A specific subheadline for sharing.")
+
+    def test_article_detail_og_type_is_article(self):
+        make_article(slug="og-type-article", headline="OG Type Article")
+        response = self.client.get(reverse("article_detail", args=["og-type-article"]))
+        self.assertContains(response, 'property="og:type" content="article"')
+
+    def test_article_detail_og_image_uses_hero_image(self):
+        make_article(
+            slug="hero-image-article", headline="Hero Image Article",
+            hero_image_url="https://images.example.com/hero.jpg",
+        )
+        response = self.client.get(reverse("article_detail", args=["hero-image-article"]))
+        self.assertContains(response, "https://images.example.com/hero.jpg")
+
+    def test_robots_txt_returns_200(self):
+        response = self.client.get("/robots.txt")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "text/plain")
+
+    def test_robots_txt_references_sitemap(self):
+        response = self.client.get("/robots.txt")
+        self.assertContains(response, "Sitemap:")
+        self.assertContains(response, "/sitemap.xml")
+
+    def test_sitemap_returns_200(self):
+        response = self.client.get("/sitemap.xml")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/xml")
+
+    def test_sitemap_includes_published_article(self):
+        make_article(slug="sitemap-article", headline="Sitemap Article")
+        response = self.client.get("/sitemap.xml")
+        self.assertContains(response, "/articles/sitemap-article/")
+
+    def test_sitemap_excludes_draft_article(self):
+        make_article(slug="sitemap-draft", headline="Sitemap Draft", status=Article.Status.DRAFT)
+        response = self.client.get("/sitemap.xml")
+        self.assertNotContains(response, "/articles/sitemap-draft/")
+
+    def test_sitemap_includes_static_pages(self):
+        response = self.client.get("/sitemap.xml")
+        self.assertContains(response, reverse("home"))
+        self.assertContains(response, reverse("about"))
