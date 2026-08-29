@@ -49,10 +49,22 @@
              class="{% if request.resolver_match.url_name == 'notable_sales' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
             Notable Sales
           </a>
-          <a href="#" class="text-gray-300 hover:text-white pb-1 border-b-2 border-transparent transition-colors">Market Pulse</a>
-          <a href="#" class="text-gray-300 hover:text-white pb-1 border-b-2 border-transparent transition-colors">Agents</a>
-          <a href="#" class="text-gray-300 hover:text-white pb-1 border-b-2 border-transparent transition-colors">Neighborhoods</a>
-          <a href="#" class="text-gray-300 hover:text-white pb-1 border-b-2 border-transparent transition-colors">About</a>
+          <a href="{% url 'market_pulse' %}"
+             class="{% if request.resolver_match.url_name == 'market_pulse' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
+            Market Pulse
+          </a>
+          <a href="{% url 'agents' %}"
+             class="{% if request.resolver_match.url_name == 'agents' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
+            Agents
+          </a>
+          <a href="{% url 'neighborhoods' %}"
+             class="{% if request.resolver_match.url_name == 'neighborhoods' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
+            Neighborhoods
+          </a>
+          <a href="{% url 'about' %}"
+             class="{% if request.resolver_match.url_name == 'about' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
+            About
+          </a>
         </nav>
 
       </div>

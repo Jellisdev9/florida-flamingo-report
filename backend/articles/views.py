@@ -141,3 +141,13 @@ def article_detail_view(request, slug):
         "related": related,
     }
     return render(request, "article_detail.html", context)
+
+
+def about_view(request):
+    """
+    Renders /about/ — a static masthead page, no editorial content query
+    beyond the shared header/sidebar context every page uses.
+    """
+    subscribed = request.session.pop("subscribed", False)
+    context = {**_base_context(), "subscribed": subscribed}
+    return render(request, "about.html", context)

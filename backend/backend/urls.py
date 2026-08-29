@@ -12,8 +12,9 @@ from django.urls import path, include
 from django.http import JsonResponse
 
 # Import the template views — these render HTML pages
-from articles.views import home_view, article_detail_view
+from articles.views import home_view, article_detail_view, about_view
 from sales.views import notable_sales_view
+from market.views import market_pulse_view, agents_view, neighborhoods_view
 from subscribers.views import subscribe_view
 
 
@@ -48,6 +49,18 @@ urlpatterns = [
 
     # Notable sales grid
     path("notable-sales/", notable_sales_view, name="notable_sales"),
+
+    # Market Pulse — Market Pulse category articles
+    path("market-pulse/", market_pulse_view, name="market_pulse"),
+
+    # Agents — full Top Agents leaderboard + Agent Watch articles
+    path("agents/", agents_view, name="agents"),
+
+    # Neighborhoods — full Neighborhood Watch grid + articles
+    path("neighborhoods/", neighborhoods_view, name="neighborhoods"),
+
+    # About — static masthead page
+    path("about/", about_view, name="about"),
 
     # Newsletter subscribe — POST only (the view enforces this with @require_POST)
     path("subscribe/", subscribe_view, name="subscribe"),

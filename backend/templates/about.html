@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}About — Florida Flamingo Report{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="w-full bg-white border-b border-gray-200 py-8 px-4 md:px-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="font-serif text-4xl md:text-5xl font-bold text-[#0d1b2a]">About Florida Flamingo Report</h1>
+    <p class="text-lg text-gray-500 mt-2">Florida real estate intelligence, without the fluff.</p>
+  </div>
+</div>
+
+<main class="flex-1 w-full max-w-4xl mx-auto px-4 md:px-8 py-12">
+  <div class="bg-white border border-gray-200 rounded-sm shadow-sm p-8 md:p-12 prose prose-lg max-w-none text-gray-800">
+
+    <p>
+      Florida Flamingo Report covers the deals, agents, and neighborhoods
+      shaping Florida real estate — notable sales, agent moves, market
+      trends, luxury closings, and development news across South Florida,
+      Tampa Bay, Orlando, Jacksonville, and the Panhandle.
+    </p>
+
+    <p>
+      We track closed sales, ranked agent performance, and neighborhood
+      momentum so buyers, sellers, and industry watchers can see where the
+      market is actually moving — not just where it's been.
+    </p>
+
+    <h3 class="font-serif font-bold text-[#0d1b2a]">What we cover</h3>
+    <ul>
+      <li><strong>Notable Sales</strong> — the biggest closings across the state</li>
+      <li><strong>Agent Watch</strong> — rankings and moves among Florida's top-producing agents</li>
+      <li><strong>Neighborhood Watch</strong> — where demand is heating up, cooling off, or holding steady</li>
+      <li><strong>Market Pulse</strong> — data and analysis on pricing, inventory, and trends</li>
+    </ul>
+
+    <p>
+      Have a tip, a correction, or a notable sale we should know about?
+      Subscribe below and we'll keep you posted.
+    </p>
+
+  </div>
+
+  <!-- Subscribe CTA -->
+  <div class="bg-[#0f4c5c] text-white rounded-sm p-8 shadow-sm flex flex-col items-center text-center mt-8">
+    <h3 class="font-serif font-bold text-2xl mb-2">Subscribe to Florida Flamingo Report</h3>
+    <p class="text-sm text-gray-200 mb-6 leading-relaxed max-w-md">
+      Notable sales, agent moves, and market intelligence — delivered weekly.
+    </p>
+    {% if subscribed %}
+      <p class="text-[#d4a817] font-bold">You're subscribed!</p>
+    {% else %}
+      <form method="POST" action="{% url 'subscribe' %}" class="w-full max-w-sm flex flex-col gap-3">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}" />
+        <input type="email" name="email" placeholder="Email address"
+               class="w-full px-4 py-3 text-gray-900 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#d4a817] text-sm" />
+        <button type="submit"
+                class="w-full bg-[#0d1b2a] text-white font-bold py-3 rounded-sm hover:bg-gray-800 transition-colors text-sm">
+          SUBSCRIBE
+        </button>
+      </form>
+    {% endif %}
+    <p class="text-[10px] text-gray-300 mt-4">No spam. Unsubscribe anytime.</p>
+  </div>
+</main>
+{% endblock %}

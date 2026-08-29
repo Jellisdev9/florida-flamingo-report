@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Neighborhood Watch — Florida Flamingo Report{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="w-full bg-white border-b border-gray-200 py-8 px-4 md:px-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="font-serif text-4xl md:text-5xl font-bold text-[#0d1b2a]">Neighborhood Watch</h1>
+    <p class="text-lg text-gray-500 mt-2">Where Florida buyers are moving next.</p>
+  </div>
+</div>
+
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 py-8 flex flex-col lg:flex-row gap-10">
+
+  <!-- ── Main Content ────────────────────────────────────────────────── -->
+  <div class="w-full lg:w-2/3 flex flex-col gap-10">
+
+    <!-- Neighborhood grid -->
+    <div>
+      {% if neighborhoods %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {% for n in neighborhoods %}
+        <div class="bg-white border border-gray-200 rounded-sm p-5 shadow-sm flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <span class="font-serif font-bold text-lg text-[#0d1b2a]">{{ n.neighborhood }}</span>
+            <span class="text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider
+                         {% if n.tag == 'HOT' %}bg-[#e05c4b] text-white
+                         {% elif n.tag == 'RISING' %}bg-[#2e7d32] text-white
+                         {% elif n.tag == 'COOLING' %}bg-[#0f4c5c] text-white
+                         {% else %}bg-gray-200 text-gray-700{% endif %}">
+              {{ n.get_tag_display }}
+            </span>
+          </div>
+          <span class="text-xs text-gray-500">{{ n.city }}, FL</span>
+          <p class="text-sm text-gray-700 leading-relaxed">{{ n.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-gray-400 text-sm py-8 text-center">No neighborhood intel available yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- Neighborhood Watch stories -->
+    <div>
+      <h3 class="font-serif font-bold text-2xl text-[#0d1b2a] mb-6">Neighborhood Watch Stories</h3>
+      {% if watch_articles %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {% for article in watch_articles %}
+        <a href="{% url 'article_detail' article.slug %}" class="group flex flex-col bg-white rounded-sm overflow-hidden shadow-sm border border-gray-200">
+          <div class="h-40 w-full overflow-hidden">
+            <img src="{{ article.hero_image_url|default:'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=600' }}"
+                 alt="{{ article.headline }}"
+                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          </div>
+          <div class="p-5 flex flex-col flex-1">
+            <h4 class="font-serif text-base font-bold leading-tight mb-2 group-hover:text-[#0f4c5c] transition-colors">
+              {{ article.headline }}
+            </h4>
+            <span class="mt-auto text-xs text-gray-500">{{ article.published_date|date:"M j, Y" }}</span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-gray-400 text-sm py-8 text-center">No neighborhood watch stories yet.</p>
+      {% endif %}
+    </div>
+
+  </div>
+  <!-- ── End Main Content ──────────────────────────────────────────── -->
+
+  <!-- ── Sidebar ───────────────────────────────────────────────────── -->
+  <div class="w-full lg:w-1/3 flex flex-col gap-8">
+
+    {% include "partials/top_agents_sidebar.html" %}
+
+    <!-- Subscribe CTA -->
+    <div class="bg-[#0f4c5c] text-white rounded-sm p-6 shadow-sm flex flex-col items-center text-center">
+      <h3 class="font-serif font-bold text-2xl mb-2">Know Before It's Hot</h3>
+      <p class="text-sm text-gray-200 mb-6 leading-relaxed">
+        Get the latest neighborhood intelligence — delivered weekly.
+      </p>
+      {% if subscribed %}
+        <p class="text-[#d4a817] font-bold">You're subscribed!</p>
+      {% else %}
+        <form method="POST" action="{% url 'subscribe' %}" class="w-full flex flex-col gap-3">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}" />
+          <input type="email" name="email" placeholder="Email address"
+                 class="w-full px-4 py-3 text-gray-900 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#d4a817] text-sm" />
+          <button type="submit"
+                  class="w-full bg-[#0d1b2a] text-white font-bold py-3 rounded-sm hover:bg-gray-800 transition-colors text-sm">
+            SUBSCRIBE
+          </button>
+        </form>
+      {% endif %}
+      <p class="text-[10px] text-gray-300 mt-4">No spam. Unsubscribe anytime.</p>
+    </div>
+
+  </div>
+  <!-- ── End Sidebar ───────────────────────────────────────────────── -->
+
+</main>
+{% endblock %}

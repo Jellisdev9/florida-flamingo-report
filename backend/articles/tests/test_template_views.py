@@ -126,3 +126,24 @@ class ArticleDetailViewTest(TestCase):
     def test_article_in_context(self):
         response = self.client.get(reverse("article_detail", args=["my-article"]))
         self.assertEqual(response.context["article"], self.article)
+
+
+# ── About page ─────────────────────────────────────────────────────────────────
+
+class AboutViewTest(TestCase):
+    """
+    Tests for /about/ — the static masthead/about page.
+    """
+
+    def test_returns_200(self):
+        response = self.client.get(reverse("about"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_uses_correct_template(self):
+        response = self.client.get(reverse("about"))
+        self.assertTemplateUsed(response, "about.html")
+        self.assertTemplateUsed(response, "base.html")
+
+    def test_contains_publication_name(self):
+        response = self.client.get(reverse("about"))
+        self.assertContains(response, "Florida Flamingo Report")
