@@ -4,8 +4,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  {# {% block title %} lets child templates override the page title #}
+  {% comment %}
+  {% block title %} lets child templates override the page title — the
+  one legitimate use of a block here, since it's only ever rendered
+  once (Django doesn't allow the same block name twice in one
+  template, and {# #} comments can't span multiple lines either —
+  learned that one the hard way). Everything below is a plain context
+  variable instead, so the same value can be reused in multiple tags
+  without hitting that limit — optional, with sane defaults via the
+  `default` filter for any page that doesn't pass one.
+  {% endcomment %}
   <title>{% block title %}Florida Flamingo Report{% endblock %}</title>
+
+  <meta name="description" content="{{ meta_description|default:'Notable sales, agent moves, market trends, and neighborhood intelligence across Florida.' }}" />
+
+  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml" />
+  <link rel="icon" href="{% static 'favicon.ico' %}" sizes="any" />
+  <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}" />
+
+  {# Open Graph — controls how links look when shared on Slack/Facebook/etc. #}
+  <meta property="og:site_name" content="Florida Flamingo Report" />
+  <meta property="og:type" content="{{ og_type|default:'website' }}" />
+  <meta property="og:title" content="{{ page_title|default:'Florida Flamingo Report' }}" />
+  <meta property="og:description" content="{{ meta_description|default:'Notable sales, agent moves, market trends, and neighborhood intelligence across Florida.' }}" />
+  {% if og_image %}
+  <meta property="og:image" content="{{ og_image }}" />
+  {% else %}
+  <meta property="og:image" content="https://{{ request.get_host }}{% static 'og-image.png' %}" />
+  {% endif %}
+  <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+
+  {# Twitter Card — same content, Twitter's own meta tag names #}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ page_title|default:'Florida Flamingo Report' }}" />
+  <meta name="twitter:description" content="{{ meta_description|default:'Notable sales, agent moves, market trends, and neighborhood intelligence across Florida.' }}" />
+  {% if og_image %}
+  <meta name="twitter:image" content="{{ og_image }}" />
+  {% else %}
+  <meta name="twitter:image" content="https://{{ request.get_host }}{% static 'og-image.png' %}" />
+  {% endif %}
 
   {# Google Fonts — same two fonts as the React app #}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,9 +75,18 @@
 
         {% comment %}
         Navigation — request.resolver_match.url_name gives us the current URL name
-        so we can highlight the active nav link without any JavaScript
+        so we can highlight the active nav link without any JavaScript.
+
+        flex-wrap instead of horizontal scroll: with 7 links, the nav doesn't
+        reliably fit on one line even on many desktop widths, not just mobile.
+        Hiding the scrollbar (an earlier attempt at this) only hid the
+        indicator that content overflowed — items past the edge, including
+        "About" (the last one), could still end up clipped with no visible
+        way to reach them. Wrapping onto a second line keeps every link
+        visible and reachable at any width, which a hidden scrollbar can't
+        guarantee.
         {% endcomment %}
-        <nav class="flex items-center gap-6 whitespace-nowrap text-sm font-medium overflow-x-auto">
+        <nav class="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 whitespace-nowrap text-sm font-medium">
           <a href="/"
              class="{% if request.resolver_match.url_name == 'home' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
             Home
@@ -48,10 +94,6 @@
           <a href="/notable-sales/"
              class="{% if request.resolver_match.url_name == 'notable_sales' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
             Notable Sales
-          </a>
-          <a href="{% url 'article_archive' %}"
-             class="{% if request.resolver_match.url_name == 'article_archive' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
-            Articles
           </a>
           <a href="{% url 'market_pulse' %}"
              class="{% if request.resolver_match.url_name == 'market_pulse' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
@@ -76,7 +118,7 @@
 
     {# ── Market strip ticker ──────────────────────────────────────── #}
     {# market_metrics comes from _base_context() in every view        #}
-    <div class="bg-[#0f4c5c] text-white w-full py-2 px-4 overflow-x-auto border-t border-b border-gray-700/50 shadow-sm">
+    <div class="bg-[#0f4c5c] text-white w-full py-2 px-4 overflow-x-auto no-scrollbar border-t border-b border-gray-700/50 shadow-sm">
       <div class="max-w-7xl mx-auto flex items-center justify-between min-w-max gap-6">
         {% for metric in market_metrics %}
         <div class="flex flex-col gap-1 pr-6 border-r border-gray-600/50 last:border-0 last:pr-0">
@@ -113,6 +155,7 @@
       </div>
       <div class="flex items-center gap-4 text-sm text-gray-500">
         <span>&copy; 2024 Florida Flamingo Report. All rights reserved.</span>
+        <a href="{% url 'article_archive' %}" class="hover:text-gray-700 underline">Articles</a>
         <a href="{% url 'unsubscribe' %}" class="hover:text-gray-700 underline">Unsubscribe</a>
       </div>
     </div>

@@ -33,3 +33,16 @@
 .fpr-coral     { color: #e05c4b; }
 .fpr-coral-bg  { background-color: #e05c4b; }
 .fpr-green     { color: #2e7d32; }
+
+/* ── Scrollbar-hiding utility ─────────────────────────────────────────────── */
+/* Used on the main nav and market strip: overflow-x-auto still lets a narrow
+   viewport scroll them horizontally instead of wrapping/breaking layout, but
+   the visible scrollbar bar itself looked inconsistent/out of place next to
+   the rest of the header, so it's hidden while the scroll behavior stays. */
+.no-scrollbar {
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* legacy Edge/IE */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari, modern Edge */
+}
