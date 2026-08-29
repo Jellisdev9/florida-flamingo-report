@@ -12,7 +12,7 @@ from django.urls import path, include
 from django.http import JsonResponse
 
 # Import the template views — these render HTML pages
-from articles.views import home_view, article_detail_view, about_view
+from articles.views import home_view, article_detail_view, article_archive_view, about_view
 from sales.views import notable_sales_view
 from market.views import market_pulse_view, agents_view, neighborhoods_view
 from subscribers.views import subscribe_view, unsubscribe_view
@@ -42,6 +42,9 @@ urlpatterns = [
 
     # Homepage — "" matches the root path "/"
     path("", home_view, name="home"),
+
+    # Article archive — all published articles, paginated, newest first
+    path("articles/", article_archive_view, name="article_archive"),
 
     # Individual article page — <slug:slug> captures URL-safe strings like
     # "naples-bayfront-estate" and passes them as the 'slug' keyword argument

@@ -49,10 +49,26 @@ class NeighborhoodIntelModelTest(TestCase):
 
 class FastestGrowingMarketModelTest(TestCase):
     def test_str(self):
-        m = FastestGrowingMarket.objects.create(location="Sarasota", change_display="+13.5%", rank=1)
+        m = FastestGrowingMarket.objects.create(
+            location="Sarasota", change_display="+13.5%", rank=1,
+            period_month=6, period_year=2026,
+        )
         self.assertEqual(str(m), "#1 Sarasota — +13.5%")
 
-    def test_rank_is_unique(self):
-        FastestGrowingMarket.objects.create(location="A", change_display="+1%", rank=1)
+    def test_rank_unique_per_period(self):
+        FastestGrowingMarket.objects.create(
+            location="A", change_display="+1%", rank=1, period_month=6, period_year=2026,
+        )
         with self.assertRaises(IntegrityError):
-            FastestGrowingMarket.objects.create(location="B", change_display="+2%", rank=1)
+            FastestGrowingMarket.objects.create(
+                location="B", change_display="+2%", rank=1, period_month=6, period_year=2026,
+            )
+
+    def test_rank_can_repeat_across_periods(self):
+        FastestGrowingMarket.objects.create(
+            location="A", change_display="+1%", rank=1, period_month=6, period_year=2026,
+        )
+        # Different period — should not raise
+        FastestGrowingMarket.objects.create(
+            location="B", change_display="+2%", rank=1, period_month=7, period_year=2026,
+        )

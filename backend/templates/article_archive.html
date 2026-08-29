@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}All Stories — Florida Flamingo Report{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="w-full bg-white border-b border-gray-200 py-8 px-4 md:px-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="font-serif text-4xl md:text-5xl font-bold text-[#0d1b2a]">All Stories</h1>
+    <p class="text-lg text-gray-500 mt-2">Every article, newest first.</p>
+  </div>
+</div>
+
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 py-8 flex flex-col gap-8">
+
+  {% if page_obj %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for article in page_obj %}
+    <a href="{% url 'article_detail' article.slug %}" class="group flex flex-col bg-white rounded-sm overflow-hidden shadow-sm border border-gray-200">
+      <div class="h-40 w-full overflow-hidden">
+        <img src="{{ article.hero_image_url|default:'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600' }}"
+             alt="{{ article.headline }}"
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+      </div>
+      <div class="p-5 flex flex-col flex-1">
+        <span class="text-[10px] font-bold tracking-wider text-[#e05c4b] uppercase mb-2">
+          {{ article.get_category_display }}
+        </span>
+        <h4 class="font-serif text-base font-bold leading-tight mb-3 group-hover:text-[#0f4c5c] transition-colors">
+          {{ article.headline }}
+        </h4>
+        <div class="mt-auto flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
+          <span>{{ article.byline }}</span>
+          <span>{{ article.published_date|date:"M j, Y" }}</span>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- ── Pagination ─────────────────────────────────────────────────── -->
+  {% if page_obj.has_other_pages %}
+  <div class="flex items-center justify-center gap-4 pt-4">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}"
+       class="px-4 py-2 rounded-full text-sm font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">
+      &larr; Newer
+    </a>
+    {% endif %}
+    <span class="text-sm text-gray-500">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}"
+       class="px-4 py-2 rounded-full text-sm font-bold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition-all">
+      Older &rarr;
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+  <!-- ── End Pagination ─────────────────────────────────────────────── -->
+
+  {% else %}
+  <p class="text-gray-400 text-sm py-8 text-center">No stories yet.</p>
+  {% endif %}
+
+</main>
+{% endblock %}

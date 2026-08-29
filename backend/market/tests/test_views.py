@@ -67,7 +67,11 @@ class FastestGrowingViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_returns_in_rank_order(self):
-        FastestGrowingMarket.objects.create(location="B", change_display="+10%", rank=2)
-        FastestGrowingMarket.objects.create(location="A", change_display="+15%", rank=1)
+        FastestGrowingMarket.objects.create(
+            location="B", change_display="+10%", rank=2, period_month=6, period_year=2026,
+        )
+        FastestGrowingMarket.objects.create(
+            location="A", change_display="+15%", rank=1, period_month=6, period_year=2026,
+        )
         response = self.client.get("/api/market/fastest-growing/")
         self.assertEqual(response.data[0]["location"], "A")

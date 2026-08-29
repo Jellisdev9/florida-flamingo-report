@@ -64,12 +64,15 @@ class NeighborhoodIntel(models.Model):
 class FastestGrowingMarket(models.Model):
     location = models.CharField(max_length=100)
     change_display = models.CharField(max_length=20)
-    rank = models.PositiveSmallIntegerField(unique=True)
+    rank = models.PositiveSmallIntegerField()
+    period_month = models.PositiveSmallIntegerField()
+    period_year = models.PositiveSmallIntegerField()
     source_url = models.URLField(blank=True)
     source_name = models.CharField(max_length=255, blank=True)
 
     class Meta:
         ordering = ["rank"]
+        unique_together = [["rank", "period_month", "period_year"]]
 
     def __str__(self):
         return f"#{self.rank} {self.location} — {self.change_display}"

@@ -26,7 +26,7 @@ class NeighborhoodIntelAdmin(admin.ModelAdmin):
 
 @admin.register(FastestGrowingMarket)
 class FastestGrowingMarketAdmin(admin.ModelAdmin):
-    list_display = ["rank", "location", "change_display", "source_name"]
+    list_display = ["rank", "location", "change_display", "period_month", "period_year", "source_name"]
     list_display_links = ["location"]
     list_editable = ["rank"]
     search_fields = ["location", "source_name"]

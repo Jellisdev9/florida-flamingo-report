@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found — Florida Flamingo Report{% endblock %}
+
+{% block content %}
+
+<main class="flex-1 w-full max-w-xl mx-auto px-4 md:px-8 py-24">
+  <div class="bg-white border border-gray-200 rounded-sm shadow-sm p-10 text-center">
+    <p class="font-serif text-6xl font-bold text-[#0d1b2a] mb-4">404</p>
+    <p class="font-serif text-2xl font-bold text-[#0d1b2a] mb-3">Page not found</p>
+    <p class="text-gray-600 mb-8">
+      The page you're looking for doesn't exist or may have moved.
+    </p>
+    <a href="{% url 'home' %}"
+       class="inline-block bg-[#0d1b2a] text-white font-bold px-6 py-3 rounded-sm hover:bg-gray-800 transition-colors text-sm">
+      BACK TO HOME
+    </a>
+  </div>
+</main>
+{% endblock %}
