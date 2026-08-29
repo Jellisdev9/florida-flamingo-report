@@ -60,7 +60,7 @@
           </span>
           <h2 class="font-serif text-3xl md:text-4xl font-bold leading-tight mb-3">{{ featured.title }}</h2>
           <p class="text-gray-200 mb-6 max-w-2xl">{{ featured.price_display }} — {{ featured.city }}, FL</p>
-          <a href="{% url 'notable_sales' %}"
+          <a href="{% url 'sale_detail' featured.slug %}"
              class="flex items-center gap-2 font-bold text-sm bg-white text-black px-6 py-3 w-fit rounded-sm hover:bg-[#d4a817] hover:text-white transition-colors">
             READ FULL STORY &rarr;
           </a>
@@ -74,7 +74,7 @@
         {% if sales %}
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {% for sale in sales %}
-          <div class="group relative rounded-sm overflow-hidden bg-white shadow-sm border border-gray-200 flex flex-col h-full">
+          <a href="{% url 'sale_detail' sale.slug %}" class="group relative rounded-sm overflow-hidden bg-white shadow-sm border border-gray-200 flex flex-col h-full">
             <div class="relative h-48 w-full overflow-hidden">
               {# Price badge overlaid on the top-right corner of the image #}
               <div class="absolute top-3 right-3 z-10 bg-[#0d1b2a] text-white text-sm font-bold px-3 py-1 rounded-sm shadow-md">
@@ -94,7 +94,7 @@
                 <span>{{ sale.close_date|date:"M j, Y" }}</span>
               </div>
             </div>
-          </div>
+          </a>
           {% endfor %}
         </div>
         {% else %}
@@ -115,17 +115,17 @@
         </div>
         <div class="flex flex-col gap-4">
           {% for sale in top_closings %}
-          <div class="flex items-center gap-3">
+          <a href="{% url 'sale_detail' sale.slug %}" class="flex items-center gap-3 group">
             {# forloop.counter starts at 1 (unlike forloop.index0 which starts at 0) #}
             <span class="font-serif font-bold text-2xl text-gray-200 shrink-0 w-6">{{ forloop.counter }}</span>
             <div class="flex flex-col flex-1">
-              <span class="font-bold text-sm text-gray-900">{{ sale.title }}</span>
+              <span class="font-bold text-sm text-gray-900 group-hover:text-[#0f4c5c] transition-colors">{{ sale.title }}</span>
               <span class="text-xs text-gray-500">{{ sale.city }}</span>
             </div>
             <span class="bg-[#0d1b2a] text-white text-xs font-bold px-2 py-1 rounded-sm shrink-0">
               {{ sale.price_display }}
             </span>
-          </div>
+          </a>
           {% endfor %}
         </div>
       </div>

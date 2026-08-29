@@ -8,6 +8,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
@@ -47,19 +49,32 @@ def subscribe_view(request):
     The 'next' hidden input in every subscribe form tells us where to
     redirect after saving — e.g. "/" or "/notable-sales/".
     """
-    email = request.POST.get("email", "").strip()
+    # Lowercased/stripped to match unsubscribe_view's own normalization —
+    # otherwise a mixed-case signup could never be found by a later
+    # (lowercase) unsubscribe request. get_or_create() and .filter()
+    # (used elsewhere) only run field validators via full_clean(), which
+    # neither calls — validate_email() here is what actually rejects
+    # malformed input, unlike the API path's DRF serializer.
+    email = request.POST.get("email", "").strip().lower()
     # The 'next' hidden field in the form — defaults to '/' if not provided
     next_url = request.POST.get("next", "/")
 
     if email:
-        # get_or_create returns (instance, created_bool)
-        # If the email already exists, created=False and no exception is raised
-        Subscriber.objects.get_or_create(email=email)
-        # Store a flag in the user's session so the next page can show a
-        # success message. session.pop() in the view clears it after one use.
-        request.session["subscribed"] = True
+        try:
+            validate_email(email)
+        except ValidationError:
+            pass
+        else:
+            # get_or_create returns (instance, created_bool)
+            # If the email already exists, created=False and no exception is raised
+            Subscriber.objects.get_or_create(email=email)
+            # Store a flag in the user's session so the next page can show a
+            # success message. session.pop() in the view clears it after one use.
+            request.session["subscribed"] = True
 
-    # redirect() returns a 302 response sending the browser to next_url
+    # redirect() returns a 302 response sending the browser to next_url —
+    # unconditionally, even on invalid input, matching the existing
+    # duplicate-email UX (silent no-op, no error page).
     return redirect(next_url)
 
 

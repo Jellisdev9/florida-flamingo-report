@@ -127,6 +127,22 @@ class ArticleDetailViewTest(TestCase):
         response = self.client.get(reverse("article_detail", args=["my-article"]))
         self.assertEqual(response.context["article"], self.article)
 
+    def test_links_to_sale_when_present(self):
+        from sales.models import NotableSale
+        article = make_article(slug="sale-story", headline="Sale Story", category=Article.Category.NOTABLE_SALE)
+        NotableSale.objects.create(
+            slug="linked-sale", title="Linked Sale", price=1000000, location="123 Main St",
+            city="Miami", region=NotableSale.Region.SOUTH_FLORIDA,
+            property_type=NotableSale.PropertyType.SINGLE_FAMILY,
+            close_date=datetime.date.today(), article=article,
+        )
+        response = self.client.get(reverse("article_detail", args=["sale-story"]))
+        self.assertContains(response, reverse("sale_detail", args=["linked-sale"]))
+
+    def test_no_sale_link_when_absent(self):
+        response = self.client.get(reverse("article_detail", args=["my-article"]))
+        self.assertNotContains(response, "Sale Details")
+
 
 # ── About page ─────────────────────────────────────────────────────────────────
 

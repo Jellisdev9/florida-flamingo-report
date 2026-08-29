@@ -66,6 +66,23 @@
   <!-- ── Sidebar ───────────────────────────────────────────────────────── -->
   <div class="w-full lg:w-1/3 flex flex-col gap-8">
 
+    <!-- Linked notable sale (only shown when article.sale is set) -->
+    {% if article.sale %}
+    <div class="bg-white border border-gray-200 rounded-sm p-5 shadow-sm">
+      <h3 class="font-serif font-bold text-lg mb-4 pb-2 border-b-2 border-[#0d1b2a]">Sale Details</h3>
+      <a href="{% url 'sale_detail' article.sale.slug %}" class="flex gap-4 group">
+        <img src="{{ article.sale.hero_image_url|default:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400' }}"
+             class="w-20 h-20 object-cover rounded-sm shrink-0" alt="{{ article.sale.title }}" />
+        <div class="flex flex-col">
+          <span class="font-bold text-sm leading-snug group-hover:text-[#d4a817] transition-colors mb-1">
+            {{ article.sale.title }}
+          </span>
+          <span class="text-xs text-gray-400">{{ article.sale.price_display }} &middot; {{ article.sale.city }}, FL</span>
+        </div>
+      </a>
+    </div>
+    {% endif %}
+
     <!-- Related Stories (only shown if there are related articles) -->
     {% if related %}
     <div class="bg-white border border-gray-200 rounded-sm p-5 shadow-sm">

@@ -103,7 +103,7 @@ block slots with the content defined below.
         {% for sale in closings %}
         {# forloop.first is True only on the first iteration — we skip the divider then #}
         {% if not forloop.first %}<div class="h-px w-full bg-gray-100"></div>{% endif %}
-        <a href="{% url 'notable_sales' %}" class="flex items-start gap-4 group">
+        <a href="{% url 'sale_detail' sale.slug %}" class="flex items-start gap-4 group">
           <img
             src="{{ sale.hero_image_url|default:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400' }}"
             alt="{{ sale.city }}"

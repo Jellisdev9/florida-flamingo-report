@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from sales.models import NotableSale
 from market.models import FastestGrowingMarket
+from articles.models import Article
 import datetime
 
 
@@ -90,3 +91,66 @@ class NotableSalesViewTest(TestCase):
         )
         response = self.client.get(reverse("notable_sales"))
         self.assertContains(response, "Old Period City")
+
+    def test_grid_cards_link_to_sale_detail(self):
+        response = self.client.get(reverse("notable_sales"))
+        self.assertContains(response, reverse("sale_detail", args=[self.sale.slug]))
+
+    def test_top_closings_link_to_sale_detail(self):
+        response = self.client.get(reverse("notable_sales"))
+        self.assertContains(response, reverse("sale_detail", args=[self.sale.slug]))
+
+
+# ── Sale detail page ─────────────────────────────────────────────────────────
+
+class SaleDetailViewTest(TestCase):
+    """
+    Tests for /notable-sales/<slug>/ — the individual sale detail page.
+    Previously didn't exist at all: NotableSale.slug was defined but
+    nothing routed to it, so no sale had a page of its own.
+    """
+
+    def setUp(self):
+        self.sale = make_sale(slug="my-sale", title="My Sale", beds=5, baths=4.5, sq_ft=6200, brokerage="Compass")
+
+    def test_returns_200(self):
+        response = self.client.get(reverse("sale_detail", args=["my-sale"]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_returns_404_for_missing_slug(self):
+        response = self.client.get(reverse("sale_detail", args=["does-not-exist"]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_returns_404_for_unpublished_sale(self):
+        make_sale(slug="draft-sale", status=NotableSale.Status.DRAFT)
+        response = self.client.get(reverse("sale_detail", args=["draft-sale"]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_uses_correct_template(self):
+        response = self.client.get(reverse("sale_detail", args=["my-sale"]))
+        self.assertTemplateUsed(response, "notable_sale_detail.html")
+        self.assertTemplateUsed(response, "base.html")
+
+    def test_sale_details_render(self):
+        response = self.client.get(reverse("sale_detail", args=["my-sale"]))
+        self.assertContains(response, "My Sale")
+        self.assertContains(response, "Compass")
+
+    def test_sale_in_context(self):
+        response = self.client.get(reverse("sale_detail", args=["my-sale"]))
+        self.assertEqual(response.context["sale"], self.sale)
+
+    def test_links_to_full_article_when_present(self):
+        article = Article.objects.create(
+            slug="my-sale-story", title="My Sale Story", headline="My Sale Story",
+            category=Article.Category.NOTABLE_SALE, body="Body.", byline="Staff Writer",
+            published_date=datetime.date.today(),
+        )
+        sale = make_sale(slug="sale-with-article", article=article)
+        response = self.client.get(reverse("sale_detail", args=["sale-with-article"]))
+        self.assertContains(response, reverse("article_detail", args=["my-sale-story"]))
+
+    def test_no_article_link_when_absent(self):
+        # self.sale has no linked article — shouldn't render a link to nothing
+        response = self.client.get(reverse("sale_detail", args=["my-sale"]))
+        self.assertNotContains(response, "Read the Full Story")

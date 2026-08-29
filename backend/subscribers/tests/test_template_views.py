@@ -38,6 +38,25 @@ class SubscribeViewTest(TestCase):
         # Should still redirect (302), not crash (500)
         self.assertEqual(response.status_code, 302)
 
+    def test_post_lowercases_email(self):
+        # unsubscribe_view lowercases its input before matching — if
+        # subscribe_view doesn't normalize on save, a mixed-case signup
+        # could never be found by a later (lowercase) unsubscribe request.
+        self.client.post(reverse("subscribe"), {"email": "MixedCase@Example.com", "next": "/"})
+        self.assertTrue(Subscriber.objects.filter(email="mixedcase@example.com").exists())
+
+    def test_invalid_email_is_not_saved(self):
+        # Unlike the API endpoint (a DRF serializer validates and 400s),
+        # this view previously called Subscriber.objects.get_or_create()
+        # directly, which bypasses Django's field validators entirely —
+        # garbage input was silently saved. Still redirects either way
+        # (matches the duplicate-email no-error UX), just shouldn't save.
+        response = self.client.post(
+            reverse("subscribe"), {"email": "not-an-email", "next": "/"}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Subscriber.objects.filter(email="not-an-email").exists())
+
 
 # ── Unsubscribe ────────────────────────────────────────────────────────────────
 
