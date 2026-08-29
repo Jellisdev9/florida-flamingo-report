@@ -147,3 +147,76 @@ class AboutViewTest(TestCase):
     def test_contains_publication_name(self):
         response = self.client.get(reverse("about"))
         self.assertContains(response, "Florida Flamingo Report")
+
+
+# ── Error pages ──────────────────────────────────────────────────────────────
+
+class ErrorPagesTest(TestCase):
+    """
+    Tests for the custom 404/500 templates. DEBUG=False in test.py (see
+    backend/settings/test.py), so Django's default error handlers
+    (django.views.defaults.page_not_found / server_error) are active
+    and resolve to these template names automatically — no view/URL
+    wiring of our own to test.
+    """
+
+    def test_404_uses_custom_template(self):
+        response = self.client.get("/this-page-does-not-exist/")
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, "404.html")
+
+    def test_404_page_content(self):
+        response = self.client.get("/this-page-does-not-exist/")
+        self.assertContains(response, "Page not found", status_code=404)
+
+    def test_500_template_renders(self):
+        # Not exercising Django's actual 500-dispatch machinery (that's
+        # framework internals) — just confirming our own template is
+        # valid and self-contained (no inheritance, no context needed).
+        from django.template.loader import render_to_string
+        rendered = render_to_string("500.html")
+        self.assertIn("Something went wrong", rendered)
+
+
+# ── Article archive ──────────────────────────────────────────────────────────
+
+class ArticleArchiveViewTest(TestCase):
+    """
+    Tests for /articles/ — the paginated, all-categories article archive.
+    """
+
+    def test_returns_200(self):
+        response = self.client.get(reverse("article_archive"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_uses_correct_template(self):
+        response = self.client.get(reverse("article_archive"))
+        self.assertTemplateUsed(response, "article_archive.html")
+        self.assertTemplateUsed(response, "base.html")
+
+    def test_development_category_article_shows(self):
+        # DEVELOPMENT has no other dedicated page — this is the gap the
+        # archive page exists to close.
+        make_article(
+            slug="development-article",
+            headline="Development Headline",
+            category=Article.Category.DEVELOPMENT,
+        )
+        response = self.client.get(reverse("article_archive"))
+        self.assertContains(response, "Development Headline")
+
+    def test_draft_articles_are_excluded(self):
+        make_article(slug="draft-article", headline="Draft Headline", status=Article.Status.DRAFT)
+        response = self.client.get(reverse("article_archive"))
+        self.assertNotContains(response, "Draft Headline")
+
+    def test_pagination_splits_across_pages(self):
+        # Page size is 12 — 13 articles means page 2 has exactly 1.
+        for i in range(13):
+            make_article(slug=f"article-{i}", headline=f"Headline {i}")
+
+        page_1 = self.client.get(reverse("article_archive"))
+        self.assertEqual(len(page_1.context["page_obj"]), 12)
+
+        page_2 = self.client.get(reverse("article_archive") + "?page=2")
+        self.assertEqual(len(page_2.context["page_obj"]), 1)

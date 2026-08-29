@@ -10,6 +10,7 @@ from rest_framework.exceptions import NotFound
 from django_filters.rest_framework import DjangoFilterBackend
 
 from django.shortcuts import render
+from django.utils import timezone
 
 from .models import NotableSale
 from .serializers import NotableSaleSerializer, NotableSaleListSerializer
@@ -89,7 +90,17 @@ def notable_sales_view(request):
     top_closings = NotableSale.objects.filter(
         status=NotableSale.Status.PUBLISHED
     ).order_by("-price")[:5]
-    fastest_growing = FastestGrowingMarket.objects.order_by("rank")[:5]
+
+    # Same current-period-with-fallback pattern as agents_view (market/views.py):
+    # without it, refreshing this data periodically would just accumulate rows
+    # forever with no natural "current" set to display.
+    now = timezone.now()
+    fastest_growing = FastestGrowingMarket.objects.filter(
+        period_year=now.year, period_month=now.month
+    ).order_by("rank")[:5]
+    if not fastest_growing.exists():
+        fastest_growing = FastestGrowingMarket.objects.order_by("rank")[:5]
+
     market_metrics = MarketMetric.objects.all()[:5]
     top_agents = Agent.objects.order_by("rank")[:5]
 

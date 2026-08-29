@@ -3,7 +3,9 @@ Template view tests for the Notable Sales page.
 """
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from sales.models import NotableSale
+from market.models import FastestGrowingMarket
 import datetime
 
 
@@ -66,3 +68,25 @@ class NotableSalesViewTest(TestCase):
     def test_sales_in_context(self):
         response = self.client.get(reverse("notable_sales"))
         self.assertIn("sales", response.context)
+
+    def test_fastest_growing_shows_only_current_period(self):
+        now = timezone.now()
+        current = FastestGrowingMarket.objects.create(
+            location="Current Period City", change_display="+10%", rank=1,
+            period_month=now.month, period_year=now.year,
+        )
+        FastestGrowingMarket.objects.create(
+            location="Stale Period City", change_display="+5%", rank=1,
+            period_month=1, period_year=2020,
+        )
+        response = self.client.get(reverse("notable_sales"))
+        self.assertIn(current, response.context["fastest_growing"])
+        self.assertNotContains(response, "Stale Period City")
+
+    def test_fastest_growing_falls_back_to_all_when_no_current_period(self):
+        FastestGrowingMarket.objects.create(
+            location="Old Period City", change_display="+5%", rank=1,
+            period_month=1, period_year=2020,
+        )
+        response = self.client.get(reverse("notable_sales"))
+        self.assertContains(response, "Old Period City")

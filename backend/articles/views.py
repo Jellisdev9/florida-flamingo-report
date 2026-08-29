@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from django_filters.rest_framework import DjangoFilterBackend
 
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 
 from .models import Article
@@ -141,6 +142,28 @@ def article_detail_view(request, slug):
         "related": related,
     }
     return render(request, "article_detail.html", context)
+
+
+def article_archive_view(request):
+    """
+    Renders /articles/ — every published article, newest first
+    (Article.Meta.ordering is already -published_date), paginated.
+
+    Unlike the 4 category pages (Market Pulse, Agents, Neighborhoods,
+    Notable Sales), this shows all categories in one list, including
+    DEVELOPMENT — the one category with no dedicated page of its own —
+    and is the only place older articles remain reachable once more
+    than fit on the homepage's 5-article row.
+    """
+    articles = Article.objects.filter(status=Article.Status.PUBLISHED)
+    paginator = Paginator(articles, 12)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
+    context = {
+        **_base_context(),
+        "page_obj": page_obj,
+    }
+    return render(request, "article_archive.html", context)
 
 
 def about_view(request):
