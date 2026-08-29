@@ -58,10 +58,6 @@
              class="{% if request.resolver_match.url_name == 'notable_sales' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
             Notable Sales
           </a>
-          <a href="{% url 'article_archive' %}"
-             class="{% if request.resolver_match.url_name == 'article_archive' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
-            Articles
-          </a>
           <a href="{% url 'market_pulse' %}"
              class="{% if request.resolver_match.url_name == 'market_pulse' %}border-b-2 border-[#d4a817] text-[#d4a817]{% else %}text-gray-300 hover:text-white border-b-2 border-transparent{% endif %} pb-1 transition-colors">
             Market Pulse
@@ -122,6 +118,7 @@
       </div>
       <div class="flex items-center gap-4 text-sm text-gray-500">
         <span>&copy; 2024 Florida Flamingo Report. All rights reserved.</span>
+        <a href="{% url 'article_archive' %}" class="hover:text-gray-700 underline">Articles</a>
         <a href="{% url 'unsubscribe' %}" class="hover:text-gray-700 underline">Unsubscribe</a>
       </div>
     </div>
