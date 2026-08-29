@@ -23,7 +23,7 @@ Covers notable sales, agent moves, market trends, neighborhoods, luxury closings
 - Tailwind CSS via the standalone CLI binary (`backend/tailwindcss`, gitignored — re-download command below)
 
 ### Deployment
-- Docker Compose: `web` (gunicorn), `db` (Postgres), `caddy` (reverse proxy + TLS)
+- Docker Compose: `web` (gunicorn), `db` (Postgres), `caddy` (reverse proxy + TLS), `backup` (nightly Postgres backups)
 - Caddy — automatic TLS (internal CA locally, Let's Encrypt in production) from one `Caddyfile`
 - GitHub Actions — test gate + image build/push to GHCR (`.github/workflows/ci.yml`)
 
@@ -32,6 +32,9 @@ Covers notable sales, agent moves, market trends, neighborhoods, luxury closings
 ```
 florida-flamingo-report/
 ├── CLAUDE.md
+├── backup/                         # nightly Postgres backup service (pg_dump + rclone)
+│   ├── Dockerfile
+│   └── backup.sh
 ├── backend/                        # Django project root
 │   ├── manage.py
 │   ├── pyproject.toml              # uv-managed deps
@@ -248,14 +251,48 @@ iteration loop. `docker compose up --build` (the same stack that runs
 on the VPS) is the final pre-ship verification step, run before
 pushing.
 
+### Postgres backups
+
+A `backup` service (`backup/Dockerfile`, `backup/backup.sh`) runs
+`pg_dump | gzip` on a loop (default every 24h, `BACKUP_INTERVAL_SECONDS`)
+and pushes each dump offsite via `rclone`, to any S3-compatible bucket
+(AWS S3, Backblaze B2, Cloudflare R2, MinIO, ...) — see `.env.example`
+for the `RCLONE_CONFIG_REMOTE_*` vars. Deliberately **not** the
+pre-built `postgres-backup-s3`-style Docker Hub images: the popular
+ones (`schickling/postgres-backup-s3` and its most-starred fork) are
+archived/unmaintained, and the actively-maintained alternative
+(`prodrigestivill/postgres-backup-local`) only writes to local disk —
+which defeats the point, since losing the VPS disk would take the DB
+and its backups together. A ~20-line custom script matches this
+project's existing bias toward owning simple infra directly (same
+reasoning as Caddy replacing nginx+`mkcert`) over depending on a
+third-party image that might go stale.
+
+Retention is handled by a lifecycle rule on the bucket itself (e.g.
+expire objects after 30 days) rather than in app code — every
+S3-compatible provider supports this natively, so there's no rotation
+logic to write or test.
+
+If `BACKUP_BUCKET` is unset, the container logs and skips each cycle
+instead of failing — local dev and any environment without a bucket
+configured yet just runs without backups, no crash loop.
+
+**Verified locally**: `pg_dump` connects to the `db` service and
+produces a valid gzip dump; `rclone copy` correctly delivers it to a
+remote (tested against a local-filesystem `rclone` remote standing in
+for real S3 credentials, which don't exist yet — see Next Steps).
+
 ## Next Steps
 
 - [ ] Provision the shared VPS (recommended: Hetzner CX32, ~$9/mo)
 - [ ] Add `VPS_HOST` / `VPS_USER` / `VPS_SSH_KEY` repo secrets once
       the VPS exists, so the `deploy` job in
       `.github/workflows/ci.yml` can actually run
-- [ ] Decide a Postgres backup approach for production — not yet
-      planned
+- [ ] Create a real S3-compatible bucket + credentials (any provider)
+      and set `BACKUP_BUCKET` / `RCLONE_CONFIG_REMOTE_*` in production's
+      `.env`, plus a lifecycle rule on the bucket for retention — the
+      `backup` service is built and verified but has never pushed to a
+      real remote yet
 - [ ] First real deploy: `git clone` this repo onto the VPS at
       `/opt/florida-flamingo-report`, set `SITE_ADDRESS` to the real
       domain in its root `.env`, `docker compose up -d`
