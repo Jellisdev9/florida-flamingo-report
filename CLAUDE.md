@@ -133,6 +133,10 @@ uv sync                              # creates .venv and installs all deps
 uv run python manage.py migrate
 uv run python manage.py createsuperuser
 
+# From the repo root — lets host-based `manage.py test` (see below) reach
+# Docker's Postgres directly, no native Postgres install needed
+cp docker-compose.override.yml.example docker-compose.override.yml
+
 # Seed mock data (after migrations)
 uv run python manage.py loaddata fixtures/initial_data.json
 
@@ -161,6 +165,30 @@ docker compose up --build   # from the repo root — web + Postgres + Caddy
 ```
 
 `manage.py` defaults `DJANGO_SETTINGS_MODULE` to `backend.settings.development`, and `development.py` hardcodes SQLite with no required secrets — the server runs even without a `.env` file present, though one should still be created for `SECRET_KEY` and other overrides.
+
+**Never install Postgres natively on the dev machine.** `manage.py
+test` always forces `backend.settings.test` regardless of `.env`'s
+`DJANGO_SETTINGS_MODULE` (see `manage.py` — deliberate, so tests run
+against real Postgres like CI does, not SQLite), and `test.py` always
+needs a real Postgres server reachable at `DB_HOST`/`DB_PORT`.
+`docker-compose.override.yml` (gitignored — copy it from
+`docker-compose.override.yml.example` during setup, above) publishes
+Docker's `db` container to `localhost:5432` for exactly this, so host
+commands reach Docker's Postgres instead of needing a native install.
+For anything else that needs to run inside the actual container
+context, use `docker compose exec web python manage.py <command>`
+instead. A native install used to exist early in this project (from
+before the Docker/Caddy pivot, when the plan was gunicorn + native
+nginx + native Postgres to mirror production on the dev machine
+directly) and caused real friction later: its role/database name
+silently drifted out of sync with Docker's during a rename, since
+nothing kept the two in sync. If `backend/.env` on your machine sets
+`DJANGO_SETTINGS_MODULE=backend.settings.production` to point at a
+native Postgres, switch it back to `backend.settings.development` (or
+delete the override and let `manage.py`'s own default apply) — and add
+`DB_NAME`/`DB_USER`/`DB_PASSWORD`/`DB_HOST=localhost`/`DB_PORT=5432`
+to `backend/.env` (matching the root `.env`'s values) so `manage.py
+test` can still find Docker's Postgres.
 
 ## Environment Variables
 
