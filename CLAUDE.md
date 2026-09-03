@@ -9,7 +9,7 @@ Covers notable sales, agent moves, market trends, neighborhoods, luxury closings
 
 - **Backend** — Django + Django REST Framework (`backend/`)
 - **Templates** — Django templates (`backend/templates/`), styled with Tailwind CSS (standalone CLI binary, no Node build step)
-- **Database** — PostgreSQL (production) / SQLite (development)
+- **Database** — PostgreSQL everywhere (production and local dev alike, via Docker — see Development Workflow)
 - The DRF `/api/` endpoints are kept alongside the template views (useful for mobile/RSS/future use) but the site itself does not consume them — views query the ORM directly and pass context to templates.
 - The original React SPA (`artifacts/florida-property-review/`) has been removed. The project pivoted from React+API to Django server-rendered templates; see git history before this deletion if the old React code is ever needed.
 
@@ -18,7 +18,7 @@ Covers notable sales, agent moves, market trends, neighborhoods, luxury closings
 ### Backend
 - Django 5.x + Django REST Framework
 - django-cors-headers, django-filter
-- PostgreSQL (prod) / SQLite (dev)
+- PostgreSQL (prod and dev alike — see Development Workflow)
 - python-dotenv
 - Tailwind CSS via the standalone CLI binary (`backend/tailwindcss`, gitignored — re-download command below)
 
@@ -53,7 +53,7 @@ florida-flamingo-report/
 │   ├── backend/                    # Django config package
 │   │   ├── settings/
 │   │   │   ├── base.py             # shared settings
-│   │   │   ├── development.py      # SQLite, DEBUG=True, CORS localhost
+│   │   │   ├── development.py      # Postgres (via Docker), DEBUG=True, CORS localhost
 │   │   │   └── production.py       # PostgreSQL, DEBUG=False
 │   │   ├── urls.py                 # root URL config (template pages + /api/)
 │   │   ├── wsgi.py
@@ -126,16 +126,17 @@ All endpoints are prefixed with `/api/`
 Uses [uv](https://docs.astral.sh/uv/) for Python dependency management. Dependencies live in `backend/pyproject.toml`. No Node/pnpm needed to run the site.
 
 ```bash
+# From the repo root, first — lets host-based Django commands (below)
+# reach Docker's Postgres directly, no native Postgres install needed
+cp docker-compose.override.yml.example docker-compose.override.yml
+docker compose up -d db              # only the db container, for now
+
 # Backend setup (run once)
 cd backend
 cp .env.example .env
 uv sync                              # creates .venv and installs all deps
 uv run python manage.py migrate
 uv run python manage.py createsuperuser
-
-# From the repo root — lets host-based `manage.py test` (see below) reach
-# Docker's Postgres directly, no native Postgres install needed
-cp docker-compose.override.yml.example docker-compose.override.yml
 
 # Seed mock data (after migrations)
 uv run python manage.py loaddata fixtures/initial_data.json
@@ -164,13 +165,11 @@ Before pushing, verify against the same stack that runs in production:
 docker compose up --build   # from the repo root — web + Postgres + Caddy
 ```
 
-`manage.py` defaults `DJANGO_SETTINGS_MODULE` to `backend.settings.development`, and `development.py` hardcodes SQLite with no required secrets — the server runs even without a `.env` file present, though one should still be created for `SECRET_KEY` and other overrides.
+`manage.py` defaults `DJANGO_SETTINGS_MODULE` to `backend.settings.development`. `development.py` and `test.py` (which `manage.py test` always forces regardless of `.env` — see `manage.py` — so tests run against the same engine as CI) both use real Postgres, not SQLite, reading `DB_NAME`/`DB_USER`/`DB_PASSWORD`/`DB_HOST`/`DB_PORT` from the environment with defaults matching Docker's `db` container. SQLite was dropped entirely — one database engine everywhere (dev, test, prod) beats a separate SQLite-only path that could silently diverge in behavior from what production actually runs.
 
-**Never install Postgres natively on the dev machine.** `manage.py
-test` always forces `backend.settings.test` regardless of `.env`'s
-`DJANGO_SETTINGS_MODULE` (see `manage.py` — deliberate, so tests run
-against real Postgres like CI does, not SQLite), and `test.py` always
-needs a real Postgres server reachable at `DB_HOST`/`DB_PORT`.
+**This means Docker's `db` container has to be running before `runserver`/`migrate`/`test` will work at all** — `docker compose up -d db` (see setup, above). Host commands and the Docker `web` container share the exact same Postgres database (both reach the same `db` container — host via the port `docker-compose.override.yml` publishes, `web` via the internal Docker network) — they're not two separate copies of the data.
+
+**Never install Postgres natively on the dev machine.**
 `docker-compose.override.yml` (gitignored — copy it from
 `docker-compose.override.yml.example` during setup, above) publishes
 Docker's `db` container to `localhost:5432` for exactly this, so host
@@ -187,15 +186,15 @@ nothing kept the two in sync. If `backend/.env` on your machine sets
 native Postgres, switch it back to `backend.settings.development` (or
 delete the override and let `manage.py`'s own default apply) — and add
 `DB_NAME`/`DB_USER`/`DB_PASSWORD`/`DB_HOST=localhost`/`DB_PORT=5432`
-to `backend/.env` (matching the root `.env`'s values) so `manage.py
-test` can still find Docker's Postgres.
+to `backend/.env` (matching the root `.env`'s values) so `runserver`/
+`migrate`/`test` can all still find Docker's Postgres.
 
 ## Environment Variables
 
 See `backend/.env.example`. Key variables:
 - `DJANGO_SETTINGS_MODULE` — `backend.settings.development` locally
 - `SECRET_KEY` — required in production
-- `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` — production PostgreSQL
+- `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` — Postgres connection, used in development/test/production alike (defaults match Docker's `db` container for local dev)
 - `CORS_ALLOWED_ORIGINS` — comma-separated list of allowed frontend origins (relevant only for `/api/` consumers)
 
 ## Testing — TDD Red/Green
@@ -274,10 +273,10 @@ image out to the VPS is a separate, manually-triggered step
 auto-deploying on every push — kept manual until the pipeline is
 proven.
 
-Local dev (`manage.py runserver` + SQLite) is unchanged for the fast
-iteration loop. `docker compose up --build` (the same stack that runs
-on the VPS) is the final pre-ship verification step, run before
-pushing.
+Local dev (`manage.py runserver`, Postgres via Docker's `db` container)
+is unchanged for the fast iteration loop. `docker compose up --build`
+(the same stack that runs on the VPS) is the final pre-ship
+verification step, run before pushing.
 
 ### Postgres backups
 
